@@ -12,7 +12,6 @@ import { ContainerComponent } from "./container/container.component";
 export const COMPONENTS = [BrowseComponent, HomeComponent, ItemDetailComponent, SearchComponent, ScanComponent, ContainerComponent];
 
 const routes: Routes = [
-    //{ path: "", redirectTo: "/(homeTab:home//browseTab:browse//searchTab:search)", pathMatch: "full" },
     { path: "", redirectTo: "/(homeTab:home//browseTab:browse//searchTab:search//scanTab:scan)", pathMatch: "full" },
 
     { path: "home", component: HomeComponent, outlet: "homeTab" },
@@ -20,8 +19,8 @@ const routes: Routes = [
     { path: "search", component: SearchComponent, outlet: "searchTab" },
     { path: "scan", component ScanComponent, outlet: "scanTab"},
 
-    { path: "item/:id", component: ItemDetailComponent, outlet: "homeTab" }
-    { path: "container/:id", component ContainerComponent, outlet "homeTab"}
+    { path: "item/:id", component: ItemDetailComponent, outlet: "homeTab" },
+    { path: "container/:id", component: ContainerComponent, outlet "homeTab"}
 ];
 
 @NgModule({

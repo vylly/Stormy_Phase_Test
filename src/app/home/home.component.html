@@ -2,19 +2,10 @@
     <Label class="action-bar-title" text="Stock"></Label>
 </ActionBar>
 
-<!--
 <GridLayout class="page page-content">
-    <ListView [containers]="containers" class="list-group">
-        <ng-template let-container="container">
+    <ListView [items]="containers" class="list-group">
+        <ng-template let-container="item">
             <Label [nsRouterLink]="['../container', container.id]" [text]="container.name" class="list-group-item"></Label>
-        </ng-template>
-    </ListView>
-</GridLayout>
--->
-<GridLayout class="page page-content">
-    <ListView [containers]="containers" class="list-group">
-        <ng-template let-container="container">
-            <Label [nsRouterLink]="['../container', container.id]" [text]="container.name" class="list-group-item"></Label>
-        </ng-template>
+          </ng-template>
     </ListView>
 </GridLayout>

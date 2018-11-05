@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { RouterExtensions } from "nativescript-angular/router";
 import { DataService, IDataContainer, IDataItem } from "../core/data.service";
 
 /* ***********************************************************
@@ -16,14 +17,17 @@ import { DataService, IDataContainer, IDataItem } from "../core/data.service";
 })
 export class ContainerComponent implements OnInit {
   container: IDataContainer;
+  items: Array<IDataItem>;
 
   constructor(
       private data: DataService,
-      private route: ActivatedRoute
+      private route: ActivatedRoute,
+      private router: RouterExtensions
   ) { }
 
   ngOnInit(): void {
       const id = +this.route.snapshot.params.id;
       this.container = this.data.getContainer(id);
+      //this.items = this.container.items;
   }
 }

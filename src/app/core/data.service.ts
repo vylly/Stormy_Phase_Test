@@ -8,7 +8,7 @@ export interface IDataItem {
 export interface IDataContainer {
     id: number;
     name: string;
-    //description: Array<IDataItem> ;
+    items: Array<IDataItem> ;
 }
 
 @Injectable()
@@ -102,12 +102,12 @@ export class DataService {
         {
             id: 1,
             name: "Grenier",
-            //description = new Array<IDataItem>(this.items[1], this.items[2], this.items[3])
+            items = new Array<IDataItem>(this.items[1], this.items[2], this.items[3])
         },
         {
             id: 2,
             name: "Placard",
-            //description = new Array<IDataItem>(this.items[4], this.items[5], this.items[6])
+            items = new Array<IDataItem>(this.items[4], this.items[5], this.items[6])
         },
 
     );
@@ -124,7 +124,7 @@ export class DataService {
     getContainers(): Array<IDataContainer> {
         return this.containers;
     }
-    getContainer(id: number): IDataContainer{
-        return this.containers.filter((container) => container.id === id)[0];
+    getContainer(id: number): IDataContainer {
+        return this.containers.filter((container: IDataContainer) => container.id === id)[0];
     }
 }
