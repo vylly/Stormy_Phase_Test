@@ -1,0 +1,23 @@
+<TabView androidTabsPosition="bottom">
+
+    <page-router-outlet
+        *tabItem="{title: 'Stock', iconSource: getIconSource('home')}"
+        name="homeTab">
+    </page-router-outlet>
+
+    <page-router-outlet
+        *tabItem="{title: 'Browse', iconSource: getIconSource('browse')}"
+        name="browseTab">
+    </page-router-outlet>
+
+    <page-router-outlet
+        *tabItem="{title: 'Search', iconSource: getIconSource('search')}"
+        name="searchTab">
+    </page-router-outlet>
+
+    <page-router-outlet
+        *tabItem="{title: 'Scan', iconSource: getIconSource('icon')}"
+        name="scanTab">
+    </page-router-outlet>
+
+</TabView>
