@@ -28,6 +28,6 @@ export class ContainerComponent implements OnInit {
   ngOnInit(): void {
       const id = +this.route.snapshot.params.id;
       this.container = this.data.getContainer(id);
-      //this.items = this.container.items;
+      this.items = this.container.items;
   }
 }
