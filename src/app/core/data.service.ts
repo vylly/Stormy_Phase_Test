@@ -137,4 +137,7 @@ export class DataService {
     getContainer(id: number): IDataContainer {
         return this.containers.filter((container: IDataContainer) => container.id === id)[0];
     }
+    getListItems(id: number): Array<IDataItem> {
+      return getContainer(id).listItems;
+    }
 }

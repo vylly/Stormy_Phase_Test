@@ -1,19 +1,9 @@
-<!--
-<ActionBar class="action-bar">
-    <Label class="action-bar-title" [text]="test"></Label>
-</ActionBar>
-<GridLayout>
-    <Label class="m-10 h3" verticalAlignment="top" text="button : view item list"></Label>
-</GridLayout>
--->
-
-
 <ActionBar class="action-bar">
   <NavigationButton [nsRouterLink]="['../../home']" android.systemIcon="ic_menu_back"></NavigationButton>
     <Label class="action-bar-title" [text]="container.name"></Label>
 </ActionBar>
 <GridLayout class="page page-content">
-    <ListView [items]="items" class="list-group">
+    <ListView [items]="listItems" class="list-group">
         <ng-template let-item="item">
             <Label [nsRouterLink]="['../item', item.id]" [text]="item.name" class="list-group-item"></Label>
           </ng-template>
