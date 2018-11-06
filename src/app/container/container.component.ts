@@ -17,7 +17,7 @@ import { DataService, IDataContainer, IDataItem } from "../core/data.service";
 })
 export class ContainerComponent implements OnInit {
   container: IDataContainer;
-  items: Array<IDataItem>;
+  listItems: Array<IDataItem>;
 
   constructor(
       private data: DataService,
@@ -28,6 +28,7 @@ export class ContainerComponent implements OnInit {
   ngOnInit(): void {
       const id = +this.route.snapshot.params.id;
       this.container = this.data.getContainer(id);
-      this.items = this.container.items;
+      this.listItems = this.container.listItems;
+      //this.listItems = this.data.getListItems(id);
   }
 }

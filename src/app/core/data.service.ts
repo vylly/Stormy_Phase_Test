@@ -8,7 +8,7 @@ export interface IDataItem {
 export interface IDataContainer {
     id: number;
     name: string;
-    items: Array<IDataItem> ;
+    listItems: Array<IDataItem> ;
 }
 
 @Injectable()
@@ -102,12 +102,22 @@ export class DataService {
         {
             id: 1,
             name: "Grenier",
-            items: new Array<IDataItem>(this.items[1], this.items[2], this.items[3])
+            listItems: new Array<IDataItem>(
+              {
+                id: 18,
+                name: "Chaussure",
+                description: "Jolies Chaussures"
+              },
+              {
+                id: 19,
+                name: "Chaise",
+                description: "Jolie Chaise"
+              })
         },
         {
             id: 2,
             name: "Placard",
-            items: new Array<IDataItem>(this.items[4], this.items[5], this.items[6])
+            listItems: new Array<IDataItem>(this.items[4], this.items[5], this.items[6])
         },
 
     );
@@ -126,5 +136,8 @@ export class DataService {
     }
     getContainer(id: number): IDataContainer {
         return this.containers.filter((container: IDataContainer) => container.id === id)[0];
+    }
+    getListItems(id: number): Array<IDataItem> {
+      return this.getContainer(id).listItems;
     }
 }
