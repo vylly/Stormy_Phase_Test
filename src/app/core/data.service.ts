@@ -102,12 +102,12 @@ export class DataService {
         {
             id: 1,
             name: "Grenier",
-            items = new Array<IDataItem>(this.items[1], this.items[2], this.items[3])
+            items: new Array<IDataItem>(this.items[1], this.items[2], this.items[3])
         },
         {
             id: 2,
             name: "Placard",
-            items = new Array<IDataItem>(this.items[4], this.items[5], this.items[6])
+            items: new Array<IDataItem>(this.items[4], this.items[5], this.items[6])
         },
 
     );
