@@ -17,10 +17,10 @@ const routes: Routes = [
     { path: "home", component: HomeComponent, outlet: "homeTab" },
     { path: "browse", component: BrowseComponent, outlet: "browseTab" },
     { path: "search", component: SearchComponent, outlet: "searchTab" },
-    { path: "scan", component ScanComponent, outlet: "scanTab"},
+    { path: "scan", component: ScanComponent, outlet: "scanTab"},
 
     { path: "item/:id", component: ItemDetailComponent, outlet: "homeTab" },
-    { path: "container/:id", component: ContainerComponent, outlet "homeTab"}
+    { path: "container/:id", component: ContainerComponent, outlet: "homeTab"}
 ];
 
 @NgModule({
