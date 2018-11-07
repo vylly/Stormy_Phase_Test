@@ -102,7 +102,7 @@ export class DataService {
         {
             id: 1,
             name: "Grenier",
-            listItems = new Array<IDataItem>(
+            listItems: new Array<IDataItem>(
               {
                 id: 18,
                 name: "Chaussure",
@@ -117,7 +117,7 @@ export class DataService {
         {
             id: 2,
             name: "Placard",
-            listItems = new Array<IDataItem>(this.items[4], this.items[5], this.items[6])
+            listItems: new Array<IDataItem>(this.items[4], this.items[5], this.items[6])
         },
 
     );
@@ -138,6 +138,6 @@ export class DataService {
         return this.containers.filter((container: IDataContainer) => container.id === id)[0];
     }
     getListItems(id: number): Array<IDataItem> {
-      return getContainer(id).listItems;
+      return this.getContainer(id).listItems;
     }
 }
