@@ -17,17 +17,17 @@ export class DataService {
     protected items = new Array<IDataItem>(
         {
             id: 1,
-            name: "Item 1",
+            name: "Ballon de basket",
             description: "Description for Item 1"
         },
         {
             id: 2,
-            name: "Item 2",
+            name: "Casserole",
             description: "Description for Item 2"
         },
         {
             id: 3,
-            name: "Item 3",
+            name: "Raquettes de ping-pong",
             description: "Description for Item 3"
         },
         {
