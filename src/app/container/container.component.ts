@@ -47,7 +47,8 @@ export class ContainerComponent implements OnInit {
     // open dialog
     prompt(options).then(r => {
         if(r.result) {
-            let newItem = r.text;
+            let newItem: IDataItem = {id: this.data.getMaxIdItem()+1, name: r.text, description: ""};
+            this.listItems.push(newItem);
         }
     });
 }

@@ -31,10 +31,11 @@ export class HomeComponent implements OnInit {
           cancelable: true
       };
       // open dialog
-      prompt(options).then(r => {
-          if(r.result) {
-              let newItem = r.text;
-          }
-      });
+    prompt(options).then(r => {
+        if(r.result) {
+            let newContainer: IDataContainer = {id: 999, name: r.text, listItems: null}
+            this.containers.push(newContainer);
+        }
+    });
   }
 }

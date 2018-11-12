@@ -173,5 +173,23 @@ export class DataService {
     getMember(id: number): IMember {
         return this.members.filter((member) => member.id === id)[0];
     }
+    getMaxIdContainer(): number {
+        var max = 0;
+        for(var i; i<this.containers.length; i++) {
+            if(this.containers[i].id > max) {
+                max = this.containers[i].id;
+            }
+        }
+        return max;
+    }
+    getMaxIdItem(): number {
+        var max = 0;
+        for(var i; i<this.items.length; i++) {
+            if(this.items[i].id > max) {
+                max = this.items[i].id;
+            }
+        }
+        return max;
+    }
     
 }
