@@ -20,5 +20,11 @@ export class SearchComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.members = this.memberService.getMemberList();    }
+        this.members = this.memberService.getMemberList();
+    }
+
+    fabTap(args): void {
+        alert("Need to add a member in a pop-up here");
+    }
+
 }
