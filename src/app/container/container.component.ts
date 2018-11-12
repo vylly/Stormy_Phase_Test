@@ -31,4 +31,9 @@ export class ContainerComponent implements OnInit {
       this.listItems = this.container.listItems;
       //this.listItems = this.data.getListItems(id);
   }
+
+  fabTap(args): void {
+    alert("Need to add an item in a pop-up here");
+}
+
 }
