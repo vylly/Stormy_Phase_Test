@@ -1,5 +1,5 @@
 <ActionBar class="action-bar">
-    <Label class="action-bar-title" text="Stock"></Label>
+    <Label class="action-bar-title" text="List"></Label>
 </ActionBar>
 
 <GridLayout class="page page-content">
@@ -8,4 +8,9 @@
             <Label [nsRouterLink]="['../container', container.id]" [text]="container.name" class="list-group-item"></Label>
           </ng-template>
     </ListView>
+
+    <StackLayout>
+        <FAB (tap)="fabTap()" icon="res://add" class="fab-button"></FAB>
+    </StackLayout>
+    
 </GridLayout>

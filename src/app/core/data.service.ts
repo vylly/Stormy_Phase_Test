@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { verticalAlignmentProperty } from "tns-core-modules/ui/page/page";
 
 export interface IDataItem {
     id: number;
@@ -10,6 +11,12 @@ export interface IDataContainer {
     name: string;
     listItems: Array<IDataItem> ;
 }
+
+export interface IMember {
+    id: number;
+    name: string;
+}
+
 
 @Injectable()
 export class DataService {
@@ -122,6 +129,25 @@ export class DataService {
 
     );
 
+    protected members = new Array<IMember>(
+        {
+            id: 1,
+            name: "William"
+        },
+        {
+            id: 2,
+            name: "Vincent"
+        },
+        {
+            id: 3,
+            name: "Max"
+        },
+        {
+            id: 4,
+            name: "Thomas"
+        }
+    )
+
 
 
     getItems(): Array<IDataItem> {
@@ -140,4 +166,12 @@ export class DataService {
     getListItems(id: number): Array<IDataItem> {
       return this.getContainer(id).listItems;
     }
+    
+    getMemberList(): Array<IMember> {
+        return this.members;
+    }
+    getMember(id: number): IMember {
+        return this.members.filter((member) => member.id === id)[0];
+    }
+    
 }

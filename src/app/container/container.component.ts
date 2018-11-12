@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular/router";
 import { DataService, IDataContainer, IDataItem } from "../core/data.service";
+import { prompt, PromptResult, inputType, PromptOptions } from "tns-core-modules/ui/dialogs";
+import { ItemDetailComponent } from "../item-detail/item-detail.component";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -31,4 +33,23 @@ export class ContainerComponent implements OnInit {
       this.listItems = this.container.listItems;
       //this.listItems = this.data.getListItems(id);
   }
+
+  fabTap(args): void {
+      // options for the dialog
+    let options: PromptOptions = {
+        title: "New item",
+        message: "Enter the name of the item you want to add to this container",
+        inputType: inputType.text,
+        okButtonText: "OK",
+        cancelButtonText: "Cancel",
+        cancelable: true
+    };
+    // open dialog
+    prompt(options).then(r => {
+        if(r.result) {
+            let newItem = r.text;
+        }
+    });
+}
+
 }

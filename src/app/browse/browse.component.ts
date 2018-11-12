@@ -1,5 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 
+// ITEM TAB
+
+
 @Component({
     selector: "Browse",
     moduleId: module.id,
