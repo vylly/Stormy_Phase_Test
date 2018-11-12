@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import { DataService, IDataContainer, IDataItem } from "../core/data.service";
+import { prompt, PromptResult, inputType, PromptOptions } from "tns-core-modules/ui/dialogs";
 
 // LIST TAB
 
@@ -20,6 +21,20 @@ export class HomeComponent implements OnInit {
     }
 
     fabTap(args): void {
-        alert("Need to add an item in a pop-up here");
-    }
+        // options for the dialog
+      let options: PromptOptions = {
+          title: "New item",
+          message: "Enter the name of the item you want to add to this container",
+          inputType: inputType.text,
+          okButtonText: "OK",
+          cancelButtonText: "Cancel",
+          cancelable: true
+      };
+      // open dialog
+      prompt(options).then(r => {
+          if(r.result) {
+              let newItem = r.text;
+          }
+      });
+  }
 }
