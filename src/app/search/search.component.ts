@@ -1,4 +1,7 @@
 import { Component, OnInit } from "@angular/core";
+import { RouterExtensions } from "nativescript-angular/router";
+import { DataService, IMember } from "../core/data.service";
+
 
 @Component({
     selector: "Search",
@@ -6,11 +9,11 @@ import { Component, OnInit } from "@angular/core";
     templateUrl: "./search.component.html"
 })
 export class SearchComponent implements OnInit {
-    constructor() {
-        // Use the constructor to inject services.
-    }
+    members: Array<IMember>;
+
+    constructor(private memberService: DataService, private router: RouterExtensions) { }
+
 
     ngOnInit(): void {
-        // Use the "ngOnInit" handler to initialize data for the view.
-    }
+        this.members = this.memberService.getMemberList();    }
 }
