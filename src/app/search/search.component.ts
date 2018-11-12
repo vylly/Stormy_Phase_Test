@@ -2,6 +2,11 @@ import { Component, OnInit } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import { DataService, IMember } from "../core/data.service";
 
+// floating button imports
+import { registerElement } from "nativescript-angular/element-registry";
+registerElement("Fab", () => require("nativescript-floatingactionbutton").Fab);
+
+// MEMBERS TAB
 
 @Component({
     selector: "Search",
