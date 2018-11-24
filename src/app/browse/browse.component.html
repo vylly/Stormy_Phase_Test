@@ -1,16 +1,19 @@
 <ActionBar class="action-bar">
-    <Label class="action-bar-title" text="Itemmm"></Label>
+    <Label class="action-bar-title" text="Item"></Label>
 </ActionBar>
 
 <GridLayout class="page page-content">
     <Label class="page-icon fa" text="&#xf1ea;"></Label>
-    <Label class="page-placeholder" text="<!-- Page content goe here -->"></Label>
+    <Label class="page-placeholder" text="<!-- Page content goes here -->"></Label>
     <MLKitBarcodeScanner
         width="260"
         height="380"
         formats="QR_CODE, EAN_8, EAN_13"
+        ios:processEveryNthFrame="10"
+        android:processEveryNthFrame="5"
         preferFrontCamera="false"
         [torchOn]="torchOn"
+        [pause]="pause"
         (scanResult)="onScan($event)">
     </MLKitBarcodeScanner>
 </GridLayout>
