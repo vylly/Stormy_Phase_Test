@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
   	<key>NSCameraUsageDescription</key>
-  	<string>LaunchNS</string> 
+  	<string>Camera is used to scan barcodes</string> 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
