@@ -1,16 +1,22 @@
-<ActionBar class="action-bar">
+<ActionBar class="action-bar" title="title">
+    <ActionItem icon="res://info" (tap)="startTour()"></ActionItem>
     <Label class="action-bar-title" text="List"></Label>
+   
+
 </ActionBar>
 
 <GridLayout class="page page-content">
-    <ListView [items]="containers" class="list-group">
+    <ListView [items]="containers" class="list-group" #feat1>
         <ng-template let-container="item">
             <Label [nsRouterLink]="['../container', container.id]" [text]="container.name" class="list-group-item"></Label>
-          </ng-template>
+        </ng-template>
     </ListView>
 
     <StackLayout>
-        <FAB (tap)="fabTap()" icon="res://add" class="fab-button"></FAB>
+        <FAB (tap)="fabTap()" icon="res://add" class="fab-button" #feat2></FAB>
     </StackLayout>
+
+ 
     
 </GridLayout>
+
