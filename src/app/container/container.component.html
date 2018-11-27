@@ -4,8 +4,11 @@
 </ActionBar>
 <GridLayout class="page page-content">
     <ListView [items]="listItems" class="list-group">
-        <ng-template let-item="item">
-            <Label [nsRouterLink]="['../item', item.id]" [text]="item.name" class="list-group-item"></Label>
+        <ng-template let-container="item">
+            <StackLayout class="list-group-item" [nsRouterLink]="['../container', container.id]">
+                <Label [text]="container.name" class="list-group-item-heading"></Label>
+                <Label [text]="container.owner.name" class="list-group-item-text" textWrap="true"></Label>
+            </StackLayout>
           </ng-template>
     </ListView>
 

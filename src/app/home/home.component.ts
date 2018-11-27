@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
-import { DataService, IDataContainer, IDataItem } from "../core/data.service";
+import { DataService, IDataContainer} from "../core/data.service";
 import { prompt, inputType, PromptOptions } from "tns-core-modules/ui/dialogs";
 import { AppTour } from 'nativescript-app-tour';
 
@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
       // open dialog
     prompt(options).then(r => {
         if(r.result) {
-            let newContainer: IDataContainer = {id: 999, name: r.text, listItems: null}
+            let newContainer: IDataContainer = {id: 999, name: r.text, listItems: new Array<IDataContainer>(), owner: this.data.getMemberList()[0]}
             this.containers.push(newContainer);
         }
     });

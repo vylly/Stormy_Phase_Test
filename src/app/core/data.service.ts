@@ -1,15 +1,10 @@
 import { Injectable } from "@angular/core";
 import { verticalAlignmentProperty } from "tns-core-modules/ui/page/page";
-
-export interface IDataItem {
-    id: number;
-    name: string;
-    description: string;
-}
 export interface IDataContainer {
     id: number;
     name: string;
-    listItems: Array<IDataItem> ;
+    listItems: Array<IDataContainer>;
+    owner: IMember;
 }
 
 export interface IMember {
@@ -21,115 +16,11 @@ export interface IMember {
 @Injectable()
 export class DataService {
 
-    protected items = new Array<IDataItem>(
-        {
-            id: 1,
-            name: "Ballon de basket",
-            description: "Description for Item 1"
-        },
-        {
-            id: 2,
-            name: "Casserole",
-            description: "Description for Item 2"
-        },
-        {
-            id: 3,
-            name: "Raquettes de ping-pong",
-            description: "Description for Item 3"
-        },
-        {
-            id: 4,
-            name: "Item 4",
-            description: "Description for Item 4"
-        },
-        {
-            id: 5,
-            name: "Item 5",
-            description: "Description for Item 5"
-        },
-        {
-            id: 6,
-            name: "Item 6",
-            description: "Description for Item 6"
-        },
-        {
-            id: 7,
-            name: "Item 7",
-            description: "Description for Item 7"
-        },
-        {
-            id: 8,
-            name: "Item 8",
-            description: "Description for Item 8"
-        },
-        {
-            id: 9,
-            name: "Item 9",
-            description: "Description for Item 9"
-        },
-        {
-            id: 10,
-            name: "Item 10",
-            description: "Description for Item 10"
-        },
-        {
-            id: 11,
-            name: "Item 11",
-            description: "Description for Item 11"
-        },
-        {
-            id: 12,
-            name: "Item 12",
-            description: "Description for Item 12"
-        },
-        {
-            id: 13,
-            name: "Item 13",
-            description: "Description for Item 13"
-        },
-        {
-            id: 14,
-            name: "Item 14",
-            description: "Description for Item 14"
-        },
-        {
-            id: 15,
-            name: "Item 15",
-            description: "Description for Item 15"
-        },
-        {
-            id: 16,
-            name: "Item 16",
-            description: "Description for Item 16"
-        }
-
-
-    );
-    protected containers = new Array<IDataContainer>(
-        {
-            id: 1,
-            name: "Grenier",
-            listItems: new Array<IDataItem>(
-              {
-                id: 18,
-                name: "Chaussure",
-                description: "Jolies Chaussures"
-              },
-              {
-                id: 19,
-                name: "Chaise",
-                description: "Jolie Chaise"
-              })
-        },
-        {
-            id: 2,
-            name: "Placard",
-            listItems: new Array<IDataItem>(this.items[4], this.items[5], this.items[6])
-        },
-
-    );
-
     protected members = new Array<IMember>(
+        {
+            id: 0,
+            name: "all"
+        },
         {
             id: 1,
             name: "William"
@@ -148,13 +39,69 @@ export class DataService {
         }
     )
 
+    protected items = new Array<IDataContainer>(
+        {
+            id: 1,
+            name: "Ballon de basket",
+            listItems: new Array<IDataContainer>(),
+            owner: this.members[1]
+        },
+        {
+            id: 2,
+            name: "Casserole",
+            listItems: new Array<IDataContainer>(),
+            owner: this.members[4]
+        },
+        {
+            id: 3,
+            name: "Raquettes de ping-pong",
+            listItems: new Array<IDataContainer>(),
+            owner: this.members[0]
+        },
+        {
+            id: 4,
+            name: "PS4",
+            listItems: new Array<IDataContainer>(),
+            owner: this.members[2]
+        },
+        {
+            id: 5,
+            name: "Chapeau",
+            listItems: new Array<IDataContainer>(),
+            owner: this.members[3]
+        },
+        {
+            id: 6,
+            name: "Snowboard",
+            listItems: new Array<IDataContainer>(),
+            owner: this.members[4]
+        }
 
 
-    getItems(): Array<IDataItem> {
+    );
+    protected containers = new Array<IDataContainer>(
+        {
+            id: 1,
+            name: "Grenier",
+            listItems: new Array<IDataContainer>(this.items[0], this.items[1], this.items[2]),
+            owner: this.members[0]
+        },
+        {
+            id: 2,
+            name: "Placard",
+            listItems: new Array<IDataContainer>(this.items[4], this.items[5], this.items[3]),
+            owner: this.members[0]
+        },
+
+    );
+
+
+
+    getItems(): Array<IDataContainer> {
         return this.items;
     }
 
-    getItem(id: number): IDataItem {
+    getItem(id: number): IDataContainer {
         return this.items.filter((item) => item.id === id)[0];
     }
     getContainers(): Array<IDataContainer> {
@@ -163,7 +110,7 @@ export class DataService {
     getContainer(id: number): IDataContainer {
         return this.containers.filter((container: IDataContainer) => container.id === id)[0];
     }
-    getListItems(id: number): Array<IDataItem> {
+    getListItems(id: number): Array<IDataContainer> {
       return this.getContainer(id).listItems;
     }
     

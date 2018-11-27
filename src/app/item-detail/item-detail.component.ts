@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { DataService, IDataItem } from "../core/data.service";
+import { DataService, IDataContainer} from "../core/data.service";
 
 @Component({
     selector: "ItemDetail",
@@ -8,7 +8,7 @@ import { DataService, IDataItem } from "../core/data.service";
     templateUrl: "./item-detail.component.html"
 })
 export class ItemDetailComponent implements OnInit {
-    item: IDataItem;
+    item: IDataContainer;
 
     constructor(
         private data: DataService,

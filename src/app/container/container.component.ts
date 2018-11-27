@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular/router";
-import { DataService, IDataContainer, IDataItem } from "../core/data.service";
+import { DataService, IDataContainer} from "../core/data.service";
 import { prompt, PromptResult, inputType, PromptOptions } from "tns-core-modules/ui/dialogs";
 import { ItemDetailComponent } from "../item-detail/item-detail.component";
 
@@ -19,7 +19,7 @@ import { ItemDetailComponent } from "../item-detail/item-detail.component";
 })
 export class ContainerComponent implements OnInit {
   container: IDataContainer;
-  listItems: Array<IDataItem>;
+  listItems: Array<IDataContainer>;
 
   constructor(
       private data: DataService,
@@ -47,7 +47,7 @@ export class ContainerComponent implements OnInit {
     // open dialog
     prompt(options).then(r => {
         if(r.result) {
-            let newItem: IDataItem = {id: this.data.getMaxIdItem()+1, name: r.text, description: ""};
+            let newItem: IDataContainer = {id: this.data.getMaxIdItem()+1, name: r.text, listItems: new Array<IDataContainer>(), owner: this.data.getMemberList()[0]};
             this.listItems.push(newItem);
         }
     });
