@@ -31,7 +31,6 @@ export class ContainerComponent implements OnInit {
       const id = +this.route.snapshot.params.id;
       this.container = this.data.getContainer(id);
       this.listItems = this.container.listItems;
-      //this.listItems = this.data.getListItems(id);
   }
 
   fabTap(args): void {
