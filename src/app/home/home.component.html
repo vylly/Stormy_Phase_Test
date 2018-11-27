@@ -8,7 +8,6 @@
 <GridLayout class="page page-content">
     <ListView [items]="containers" class="list-group" #feat1>
         <ng-template let-container="item">
-            <!--<Label [nsRouterLink]="['../container', container.id]" [text]="container.name" class="list-group-item"></Label>-->
             <StackLayout class="list-group-item" [nsRouterLink]="['../container', container.id]">
                 <Label [text]="container.name" class="list-group-item-heading"></Label>
                 <Label [text]="container.owner.name" class="list-group-item-text" textWrap="true"></Label>
