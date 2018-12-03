@@ -10,6 +10,7 @@ import { ListPicker } from "tns-core-modules/ui/list-picker";
         <StackLayout>
             <Label [text]="prompt1"></Label>
             <ListPicker [items]="listObjects" selectedIndex=0 (selectedIndexChange)=selectedIndexChanged($event) class="p-15"></ListPicker>
+            <Button text="I want to scan the container" (tap)="selectContainer()"></Button>
             <Label [text]="prompt2"></Label>
             <TextField #nameItem hint="Name of the object"></TextField>
             <StackLayout orientation="horizontal" marginTop="12">
@@ -39,6 +40,9 @@ export class dialogBrowseComponent {
         }
 	}
 
+    public selectContainer() {
+        console.log("TODO");
+    }
     public selectedIndexChanged(args) {
         let picker = <ListPicker>args.object;
         this.picked = this.listObjects[picker.selectedIndex];
