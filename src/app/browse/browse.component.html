@@ -2,12 +2,11 @@
     <Label class="action-bar-title" text="Item"></Label>
 </ActionBar>
 
-<GridLayout class="page page-content">
-    <Label class="page-icon fa" text="&#xf1ea;"></Label>
-    <Label class="page-placeholder" text="<!-- Page content goes here -->"></Label>
+<StackLayout class="page page-content">
+    <Label class="h1" text="Aim for a QR/Barcode"></Label>
     <MLKitBarcodeScanner
-        width="260"
-        height="380"
+        width=100%
+        height=100%
         formats="QR_CODE, EAN_8, EAN_13"
         ios:processEveryNthFrame="10"
         android:processEveryNthFrame="5"
@@ -16,4 +15,4 @@
         [pause]="pause"
         (scanResult)="onScan($event)">
     </MLKitBarcodeScanner>
-</GridLayout>
+</StackLayout>

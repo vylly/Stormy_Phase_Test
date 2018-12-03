@@ -42,7 +42,7 @@ export class BrowseComponent implements OnInit {
             console.log("pausing the scanner for 3 seconds (to test the 'pause' feature)");
             this.pause = true;
             alert("code scannééé !");
-            setTimeout(() => this.pause = false, 3000)
+            setTimeout(() => this.pause = false, 1000)
           }
     }
 }
