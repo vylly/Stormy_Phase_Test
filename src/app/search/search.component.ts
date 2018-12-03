@@ -26,20 +26,20 @@ export class SearchComponent implements OnInit {
 
     fabTap(args): void {
         // options for the dialog
-      let options: PromptOptions = {
-          title: "New member",
-          message: "Enter the name of the member you want to add",
-          inputType: inputType.text,
-          okButtonText: "OK",
-          cancelButtonText: "Cancel",
-          cancelable: true
-      };
+        let options: PromptOptions = {
+            title: "New member",
+            message: "Enter the name of the member you want to add",
+            inputType: inputType.text,
+            okButtonText: "OK",
+            cancelButtonText: "Cancel",
+            cancelable: true
+        };
       // open dialog
       prompt(options).then(r => {
-          if(r.result) {
-              let newMember: IMember = {id: 9, name:r.text};
-              this.members.push(newMember);
+            if(r.result) {
+                let newMember: IMember = {id: 9, name:r.text};
+                this.members.push(newMember);
           }
       });
-  }
+    }
 }

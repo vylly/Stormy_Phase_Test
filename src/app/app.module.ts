@@ -7,6 +7,7 @@ import { CoreModule } from "./core/core.module";
 
 import { ModalDialogService } from "nativescript-angular/modal-dialog";
 import { ModalViewComponent } from "./dialogContainer/dialogContainer.component";
+import { dialogBrowseComponent } from "./dialogBrowse/dialogBrowse.component";
 
 
 @NgModule({
@@ -19,11 +20,14 @@ import { ModalViewComponent } from "./dialogContainer/dialogContainer.component"
         CoreModule
     ],
     entryComponents: [
-        ModalViewComponent
+        ModalViewComponent,
+        dialogBrowseComponent
+
     ],
     declarations: [
         AppComponent,
         ModalViewComponent,
+        dialogBrowseComponent,
         ...COMPONENTS
     ],
     schemas: [

@@ -1,10 +1,12 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewContainerRef } from "@angular/core";
 
 //import { registerElement } from "nativescript-angular/element-registry";
 // registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-firebase/mlkit/barcodescanning").MLKitBarcodeScanner);
 
 import { MLKitScanBarcodesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
-
+import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
+import { dialogBrowseComponent } from "../dialogBrowse/dialogBrowse.component";
+import { DataService, IDataContainer} from "../core/data.service";
 
 @Component({
     selector: "Browse",
@@ -15,11 +17,15 @@ export class BrowseComponent implements OnInit {
     barcodes: Array<{
         value: string;
         format: string;
-      }>;
+    }>;
+    result;
+    pause: boolean = false;
 
-      pause: boolean = false;
-
-    constructor() {
+    constructor(
+        private _modalService: ModalDialogService,
+        private data: DataService,
+        private _vcRef: ViewContainerRef
+    ) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
         *************************************************************/
@@ -36,13 +42,44 @@ export class BrowseComponent implements OnInit {
         
         const result: MLKitScanBarcodesOnDeviceResult = event.value;
         this.barcodes = result.barcodes;
-        console.log("resultat this.barcodes: " + JSON.stringify(this.barcodes));
+        
 
         if (this.barcodes.length > 0) {
-            console.log("pausing the scanner for 3 seconds (to test the 'pause' feature)");
+            console.log("resultat this.barcodes: " + JSON.stringify(this.barcodes));
+            //Pause reader
             this.pause = true;
-            alert("code scannééé !");
+
+            /* ***********************************************************
+                                * CASE 1 : UNKNOWN CODE *
+            *************************************************************/
+            // options for the dialog
+            const options: ModalDialogOptions = {
+                // tell angular where (in the component tree) to load the dialog component.
+                viewContainerRef: this._vcRef,
+                // Parameters are specified in the context, here we provide the list of containers
+                context: {objects: this.data.getContainers()}
+            };
+        
+            
+            // open dialog
+            this._modalService.showModal(dialogBrowseComponent, options)
+            .then((dialogResult: Object) => {
+                //The result is the result from the dialog popup
+                this.result = dialogResult;
+
+                //Create item
+                let newContainer: IDataContainer = {id: 999, name: this.result.newContainer, listItems: new Array<IDataContainer>(), owner: {id:999, name:this.result.owner}}
+                
+                //Push the item in the db
+                //this.listItems.push(newContainer);
+            })
             setTimeout(() => this.pause = false, 1000)
+
+            /* ***********************************************************
+                                * CASE 2 : KNOWN CODE *
+            *************************************************************/
+
+            //TODO
           }
     }
 }

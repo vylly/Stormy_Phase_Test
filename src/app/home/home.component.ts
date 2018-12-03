@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
     tour;
     result;
 
+    //List of features (for app tour)
     @ViewChild('feat1') feat1: ElementRef;
     @ViewChild('feat2') feat2: ElementRef;
 
@@ -42,25 +43,26 @@ export class HomeComponent implements OnInit {
         })
     }
 
-  startTour(){
-    const stops = [
-        {
-            view: this.feat2.nativeElement,
-            title: 'Bouton d\'ajout',
-            description: "Ajoutez des conteneurs avec ce bouton",
-            dismissable: true
-        },
-        {
-            view: this.feat1.nativeElement,
-            title: 'Liste de conteneurs',
-            description: 'La liste des conteneurs est affichée ici',
-            outerCircleColor: 'orange',
-            rippleColor: 'black'
-        }
-    ];
+    //App tour function
+    startTour(){
+        const stops = [
+            {
+                view: this.feat2.nativeElement,
+                title: 'Bouton d\'ajout',
+                description: "Ajoutez des conteneurs avec ce bouton",
+                dismissable: true
+            },
+            {
+                view: this.feat1.nativeElement,
+                title: 'Liste de conteneurs',
+                description: 'La liste des conteneurs est affichée ici',
+                outerCircleColor: 'orange',
+                rippleColor: 'black'
+            }
+        ];
 
-    this.tour = new AppTour(stops);
-    this.tour.show();
-}
+        this.tour = new AppTour(stops);
+        this.tour.show();
+    }
 
 }
