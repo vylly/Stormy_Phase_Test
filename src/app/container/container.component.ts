@@ -1,9 +1,11 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular/router";
 import { DataService, IDataContainer} from "../core/data.service";
 import { prompt, PromptResult, inputType, PromptOptions } from "tns-core-modules/ui/dialogs";
 import { ItemDetailComponent } from "../item-detail/item-detail.component";
+import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
+import { ModalViewComponent } from "../dialogContainer/dialogContainer.component";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -20,11 +22,14 @@ import { ItemDetailComponent } from "../item-detail/item-detail.component";
 export class ContainerComponent implements OnInit {
   container: IDataContainer;
   listItems: Array<IDataContainer>;
+  result;
 
   constructor(
       private data: DataService,
       private route: ActivatedRoute,
-      private router: RouterExtensions
+      private router: RouterExtensions,
+      private _modalService: ModalDialogService,
+      private _vcRef: ViewContainerRef
   ) { }
 
   ngOnInit(): void {
@@ -33,23 +38,18 @@ export class ContainerComponent implements OnInit {
       this.listItems = this.container.listItems;
   }
 
-  fabTap(args): void {
-      // options for the dialog
-    let options: PromptOptions = {
-        title: "New item",
-        message: "Enter the name of the item you want to add to this container",
-        inputType: inputType.text,
-        okButtonText: "OK",
-        cancelButtonText: "Cancel",
-        cancelable: true
+  fabTap(): void {
+    const options: ModalDialogOptions = {
+        viewContainerRef: this._vcRef,
+        context: {members: this.data.getMemberList()}
     };
-    // open dialog
-    prompt(options).then(r => {
-        if(r.result) {
-            let newItem: IDataContainer = {id: this.data.getMaxIdItem()+1, name: r.text, listItems: new Array<IDataContainer>(), owner: this.data.getMemberList()[0]};
-            this.listItems.push(newItem);
-        }
-    });
+
+    this._modalService.showModal(ModalViewComponent, options)
+    .then((dialogResult: Object) => {
+        this.result = dialogResult;
+        let newContainer: IDataContainer = {id: 999, name: this.result.newContainer, listItems: new Array<IDataContainer>(), owner: {id:999, name:this.result.owner}}
+        this.listItems.push(newContainer);
+    })
 }
 
 }

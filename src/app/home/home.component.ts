@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef } from "@angular/core";
 import { DataService, IDataContainer} from "../core/data.service";
 import { prompt, inputType, PromptOptions } from "tns-core-modules/ui/dialogs";
 import { AppTour } from 'nativescript-app-tour';
+import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
+import { ModalViewComponent } from "../dialogContainer/dialogContainer.component";
 
 
 @Component({
@@ -12,35 +14,33 @@ import { AppTour } from 'nativescript-app-tour';
 export class HomeComponent implements OnInit {
     containers: Array<IDataContainer>;
     tour;
+    result;
 
     @ViewChild('feat1') feat1: ElementRef;
     @ViewChild('feat2') feat2: ElementRef;
 
-    constructor(private data: DataService) { }
+    constructor(private data: DataService, private _modalService: ModalDialogService,
+        private _vcRef: ViewContainerRef) { }
 
     ngOnInit(): void {
         this.containers = this.data.getContainers();
     }
 
-    fabTap(args): void {
-        // options for the dialog
-      let options: PromptOptions = {
-          title: "New item",
-          message: "Enter the name of the item you want to add to this container",
-          inputType: inputType.text,
-          okButtonText: "OK",
-          cancelButtonText: "Cancel",
-          cancelable: true
-      };
-      // open dialog
-    prompt(options).then(r => {
-        if(r.result) {
-            let newContainer: IDataContainer = {id: 999, name: r.text, listItems: new Array<IDataContainer>(), owner: this.data.getMemberList()[0]}
-            this.containers.push(newContainer);
-        }
-    });
-  }
+    fabTap(): void {
+        const options: ModalDialogOptions = {
+            viewContainerRef: this._vcRef,
+			context: {members: this.data.getMemberList()}
+        };
 
+        this._modalService.showModal(ModalViewComponent, options)
+        .then((dialogResult: Object) => {
+            this.result = dialogResult;
+            if(this.result) {
+                let newContainer: IDataContainer = {id: 999, name: this.result.newContainer, listItems: new Array<IDataContainer>(), owner: {id:999, name:this.result.owner}}
+                this.containers.push(newContainer);
+            }
+        })
+    }
 
   startTour(){
     const stops = [

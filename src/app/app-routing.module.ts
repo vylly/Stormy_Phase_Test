@@ -14,7 +14,7 @@ export const COMPONENTS = [BrowseComponent, HomeComponent, ItemDetailComponent, 
 const routes: Routes = [
     { path: "", redirectTo: "/(homeTab:home//browseTab:browse//searchTab:search//scanTab:scan)", pathMatch: "full" },
 
-    { path: "home", component: HomeComponent, outlet: "homeTab" },
+    { path: "home", component: HomeComponent, outlet: "homeTab"},
     { path: "browse", component: BrowseComponent, outlet: "browseTab" },
     { path: "search", component: SearchComponent, outlet: "searchTab" },
     { path: "scan", component: ScanComponent, outlet: "scanTab"},

@@ -5,6 +5,9 @@ import { AppRoutingModule, COMPONENTS } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { CoreModule } from "./core/core.module";
 
+import { ModalDialogService } from "nativescript-angular/modal-dialog";
+import { ModalViewComponent } from "./dialogContainer/dialogContainer.component";
+
 
 @NgModule({
     bootstrap: [
@@ -15,12 +18,19 @@ import { CoreModule } from "./core/core.module";
         AppRoutingModule,
         CoreModule
     ],
+    entryComponents: [
+        ModalViewComponent
+    ],
     declarations: [
         AppComponent,
+        ModalViewComponent,
         ...COMPONENTS
     ],
     schemas: [
         NO_ERRORS_SCHEMA
+    ],
+    providers: [
+        ModalDialogService,
     ]
 })
 export class AppModule { }
