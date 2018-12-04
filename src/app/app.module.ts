@@ -8,6 +8,7 @@ import { CoreModule } from "./core/core.module";
 import { ModalDialogService } from "nativescript-angular/modal-dialog";
 import { ModalViewComponent } from "./dialogContainer/dialogContainer.component";
 import { dialogBrowseComponent } from "./dialogBrowse/dialogBrowse.component";
+import { BrowseService } from "./browse/browse.service";
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import { dialogBrowseComponent } from "./dialogBrowse/dialogBrowse.component";
     ],
     providers: [
         ModalDialogService,
+        BrowseService
     ]
 })
 export class AppModule { }

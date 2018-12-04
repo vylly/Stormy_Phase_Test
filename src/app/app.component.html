@@ -1,5 +1,4 @@
-<TabView androidTabsPosition="bottom">
-
+<TabView #tabView (selectedIndexChanged)="tabViewIndexChange( tabView.selectedIndex)" androidTabsPosition="bottom">
     <page-router-outlet
         *tabItem="{title: 'List', iconSource: getIconSource('list')}"
         name="homeTab">
@@ -14,10 +13,5 @@
         *tabItem="{title: 'Members', iconSource: getIconSource('members')}"
         name="searchTab">
     </page-router-outlet>
-<!--
-    <page-router-outlet
-        *tabItem="{title: 'Scan', iconSource: getIconSource('scan')}"
-        name="scanTab">
-    </page-router-outlet>
--->
+
 </TabView>

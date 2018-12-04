@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef } from "@angular/core";
+import { Component, OnInit, ViewContainerRef, HostBinding } from "@angular/core";
 
 //import { registerElement } from "nativescript-angular/element-registry";
 // registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-firebase/mlkit/barcodescanning").MLKitBarcodeScanner);
@@ -7,6 +7,7 @@ import { MLKitScanBarcodesOnDeviceResult } from "nativescript-plugin-firebase/ml
 import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
 import { dialogBrowseComponent } from "../dialogBrowse/dialogBrowse.component";
 import { DataService, IDataContainer} from "../core/data.service";
+import { BrowseService } from "./browse.service"
 
 @Component({
     selector: "Browse",
@@ -19,12 +20,14 @@ export class BrowseComponent implements OnInit {
         format: string;
     }>;
     result;
-    pause: boolean = false;
+    @HostBinding('class.pause')
+    pause = false;
 
     constructor(
         private _modalService: ModalDialogService,
         private data: DataService,
-        private _vcRef: ViewContainerRef
+        private _vcRef: ViewContainerRef,
+        private browseService: BrowseService
     ) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.
@@ -35,6 +38,11 @@ export class BrowseComponent implements OnInit {
         /* ***********************************************************
         * Use the "ngOnInit" handler to initialize data for this component.
         *************************************************************/
+       //Suscribe to event comming from browseService
+       this.browseService.change.subscribe(pause => {
+           //Change state of scanner
+           this.pause = pause;
+       });
     }
 
     //Function to call every X sec
@@ -42,7 +50,6 @@ export class BrowseComponent implements OnInit {
         
         const result: MLKitScanBarcodesOnDeviceResult = event.value;
         this.barcodes = result.barcodes;
-        
 
         if (this.barcodes.length > 0) {
             console.log("resultat this.barcodes: " + JSON.stringify(this.barcodes));
@@ -80,6 +87,6 @@ export class BrowseComponent implements OnInit {
             *************************************************************/
 
             //TODO
-          }
+        }
     }
 }
