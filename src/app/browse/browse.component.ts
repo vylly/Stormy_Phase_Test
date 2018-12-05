@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewContainerRef, HostBinding } from "@angular/core";
 
-//import { registerElement } from "nativescript-angular/element-registry";
-// registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-firebase/mlkit/barcodescanning").MLKitBarcodeScanner);
+import { registerElement } from "nativescript-angular/element-registry";
+registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-firebase/mlkit/barcodescanning").MLKitBarcodeScanner);
 
 import { MLKitScanBarcodesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
 import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
@@ -52,7 +52,7 @@ export class BrowseComponent implements OnInit {
         this.barcodes = result.barcodes;
 
         if (this.barcodes.length > 0) {
-            console.log("resultat this.barcodes: " + JSON.stringify(this.barcodes));
+            console.log("resultat this.barcodes is : " + JSON.stringify(this.barcodes));
             //Pause reader
             this.pause = true;
 

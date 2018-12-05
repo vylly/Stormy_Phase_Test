@@ -1,9 +1,6 @@
 import { Component, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { RouterExtensions } from "nativescript-angular/router";
 import { DataService, IDataContainer} from "../core/data.service";
-import { prompt, PromptResult, inputType, PromptOptions } from "tns-core-modules/ui/dialogs";
-import { ItemDetailComponent } from "../item-detail/item-detail.component";
 import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
 import { ModalViewComponent } from "../dialogContainer/dialogContainer.component";
 
@@ -27,7 +24,7 @@ export class ContainerComponent implements OnInit {
   constructor(
       private data: DataService,
       private route: ActivatedRoute,
-      private router: RouterExtensions,
+      //private router: RouterExtensions,
       private _modalService: ModalDialogService,
       private _vcRef: ViewContainerRef
   ) { }
