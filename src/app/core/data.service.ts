@@ -16,6 +16,8 @@ export interface IMember {
 @Injectable()
 export class DataService {
 
+    protected IP_Server: String;
+
     protected members = new Array<IMember>(
         {
             id: 0,
@@ -138,5 +140,10 @@ export class DataService {
         }
         return max;
     }
-    
+    setIPAddress(add: String) {
+        this.IP_Server = add;
+    }
+    getIPServer(): String {
+        return this.IP_Server;
+    }
 }

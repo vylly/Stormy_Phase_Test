@@ -4,6 +4,9 @@ import { prompt, inputType, PromptOptions } from "tns-core-modules/ui/dialogs";
 import { AppTour } from 'nativescript-app-tour';
 import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
 import { ModalViewComponent } from "../dialogContainer/dialogContainer.component";
+import * as dialogs from "tns-core-modules/ui/dialogs";
+import { TextField } from "tns-core-modules/ui/text-field";
+import { request, getFile, getImage, getJSON, getString, HttpRequestOptions } from "tns-core-modules/http";
 
 
 @Component({
@@ -25,6 +28,24 @@ export class HomeComponent implements OnInit {
 
     ngOnInit(): void {
         this.containers = this.data.getContainers();
+    }
+
+    // Function setIP called when the the 'enter' key is pressed in the TextField
+    // Get the address typed and set it in data service
+    setIP(result): void {
+        this.data.setIPAddress(result);
+        this.getList();
+    }
+
+    // Fuction getList
+    // Send a HTTP GET to the server and set the list of items
+    getList(): void {
+        let request: HttpRequestOptions = {url: "http://" + this.data.getIPServer() + "/items", method: "GET", dontFollowRedirects: false};
+        getJSON(request).then((r: any) => {
+            console.log("result from the get request:", r);
+        }, (e) => {
+            console.log(e);
+        });
     }
 
     fabTap(): void {

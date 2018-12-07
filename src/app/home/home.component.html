@@ -5,7 +5,8 @@
 
 </ActionBar>
 
-<GridLayout class="page page-content">
+<StackLayout class="page page-content">
+    <TextField #textIP hint="Server IP address" returnKeyType="done" (returnPress)="setIP(textIP.text)"></TextField>
     <ListView [items]="containers" class="list-group" #feat1>
         <ng-template let-container="item">
             <StackLayout class="list-group-item" [nsRouterLink]="['../container', container.id]">
@@ -18,8 +19,6 @@
     <StackLayout>
         <FAB (tap)="fabTap()" icon="res://add" class="fab-button" #feat2></FAB>
     </StackLayout>
-
- 
     
-</GridLayout>
+</StackLayout>
 

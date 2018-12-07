@@ -6,10 +6,12 @@ app = Flask(__name__)
 
 json_data=open('data.json').read()
 listItems = json.loads(json_data)
+
+
 # ============================= ROUTES ============================
 
-# Route / : get all the list of items
-@app.route('/', methods=['GET'])
+# Route /items : get all the list of items
+@app.route('/items', methods=['GET'])
 def all():
     return jsonify(listItems)
 
@@ -52,4 +54,4 @@ def add():
 
 # --------------- run server ---------------
 if __name__ == '__main__':
-    app.run(debug=True, port=80)
+    app.run(debug=True, port=80, host="0.0.0.0") # IP address 0.0.0.0 makes the server externally visible
