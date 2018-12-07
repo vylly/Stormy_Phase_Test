@@ -119,6 +119,9 @@ export class DataService {
     getMemberList(): Array<IMember> {
         return this.members;
     }
+    setMembers(list): void {
+        this.members = list;
+    }
     getMember(id: number): IMember {
         return this.members.filter((member) => member.id === id)[0];
     }

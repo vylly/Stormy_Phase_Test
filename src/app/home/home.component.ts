@@ -7,6 +7,7 @@ import { ModalViewComponent } from "../dialogContainer/dialogContainer.component
 import * as dialogs from "tns-core-modules/ui/dialogs";
 import { TextField } from "tns-core-modules/ui/text-field";
 import { request, getFile, getImage, getJSON, getString, HttpRequestOptions } from "tns-core-modules/http";
+import { SearchComponent } from "../search/search.component";
 
 
 @Component({
@@ -35,14 +36,34 @@ export class HomeComponent implements OnInit {
     setIP(result): void {
         this.data.setIPAddress(result);
         this.getList();
+        this.getMembers();
     }
 
-    // Fuction getList
-    // Send a HTTP GET to the server and set the list of items
+    // Function getList
+    // Send a HTTP GET to the server to the route /items and set the list of items
     getList(): void {
         let request: HttpRequestOptions = {url: "http://" + this.data.getIPServer() + "/items", method: "GET", dontFollowRedirects: false};
         getJSON(request).then((r: any) => {
-            console.log("result from the get request:", r);
+            console.log("result from the get request on /items:", r);
+            // Need to update the items in the data service (maybe sort parents / children)
+            // ...
+            // Update the list in this component
+            this.containers = r;
+        }, (e) => {
+            console.log(e);
+        });
+    }
+
+    // Fuction getMembers
+    // Send a HTTP GET to the server to the route /members and set the list of members
+    getMembers(): void {
+        let request: HttpRequestOptions = {url: "http://" + this.data.getIPServer() + "/members", method: "GET", dontFollowRedirects: false};
+        getJSON(request).then((r: any) => {
+            console.log("result from the get request on /members:", r);
+            // change in the data service
+            this.data.setMembers(r);
+            // need to update the members component with the new members
+            // ...
         }, (e) => {
             console.log(e);
         });
