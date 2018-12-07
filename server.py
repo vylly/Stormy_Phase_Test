@@ -25,9 +25,9 @@ def items():
 def members():
     return jsonify(listMembers)
 
-# Route /getfromid/<idItem> : return an item using its id
-@app.route('/getfromid/<idItem>', methods=['GET'])
-def getfromid(idItem):
+# Route /item/getfromid/<idItem> : return an item using its id
+@app.route('/item/getfromid/<idItem>', methods=['GET'])
+def getfromidItem(idItem):
     global listItems
     selectedItems = [item for item in listItems if item["id"] == int(idItem)] # returns list of the items with same id (should have length 0 or 1)
     if len(selectedItems) == 0:
@@ -35,12 +35,30 @@ def getfromid(idItem):
     else:
         return jsonify(selectedItems[0])
 
-# Route /gefromname/<nameItem> : return a list of item using the name
-@app.route('/getfromname/<nameItem>', methods=['GET'])
-def getfromname(nameItem):
+# Route /item/gefromname/<nameItem> : return a list of item using the name
+@app.route('/item/getfromname/<nameItem>', methods=['GET'])
+def getfromnameItem(nameItem):
     global listItems
-    selectedItems = [item for item in listItems if item["name"] == nameItem] # returns list of the items with same id so we take the first cell
+    selectedItems = [item for item in listItems if item["name"] == nameItem]
     return jsonify(selectedItems)
+
+# Route /member/gefromname/<idMember> : return a member using the id
+@app.route('/member/getfromid/<idMember>', methods=['GET'])
+def getfromidMember(idMember):
+    global listMembers
+    selectedMembers = [item for item in listMembers if item["id"] == int(idMember)]
+    # Return just the first cell because only one should have the same id
+    if len(selectedMembers) == 0:
+        abort(404)
+    else:
+        return jsonify(selectedMembers[0])
+
+# Route /member/gefromname/<nameItem> : return a list of members using the name
+@app.route('/member/getfromname/<nameMember>', methods=['GET'])
+def getfromnameMember(nameMember):
+    global listMembers
+    selectedMembers = [item for item in listMembers if item["name"] == nameMember]
+    return jsonify(selectedMembers)
 
 # Route /item/add : method post, add a new item to the database
 @app.route('/item/add', methods=['POST'])
@@ -50,7 +68,8 @@ def addItem():
     item = {
         'id': listItems[-1]['id'] + 1,
         'name': request.json['name'],
-        'parent': request.json['parent']
+        'parent': request.json['parent'],
+        'owner': request.json['owner']
     }
     # add the item to the list
     listItems.append(item)
