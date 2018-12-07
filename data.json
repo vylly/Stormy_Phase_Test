@@ -1,1 +1,69 @@
-[{"id": 1, "name": "grenier", "parent": 0}, {"id": 2, "name": "placard", "parent": 0}, {"id": 3, "name": "Manette de PS4", "parent": 1}, {"id": 4, "name": "Raquettes de ping-pong", "parent": 2}, {"id": 5, "name": "Sac de couchage", "parent": 2}]
+{
+    "items": [
+        {
+            "id": 1,
+            "name": "Grenier",
+            "parent": 0,
+            "owner": 0
+        },
+        {
+            "id": 2,
+            "name": "Placard",
+            "parent": 0,
+            "owner": 0
+        },
+        {
+            "id": 3,
+            "name": "Manette de PS4",
+            "parent": 1,
+            "owner": 3
+        },
+        {
+            "id": 4,
+            "name": "Raquettes de ping-pong",
+            "parent": 2,
+            "owner": 4
+        },
+        {
+            "id": 5,
+            "name": "Sac de couchage",
+            "parent": 2,
+            "owner": 1
+        },
+        {
+            "id": 6,
+            "name": "Brosse à dent",
+            "parent": 2,
+            "owner": 2
+        },
+        {
+            "id": 7,
+            "name": "Cible de fléchettes",
+            "parent": 1,
+            "owner": 0
+        }
+    ],
+
+    "members": [
+        {
+            "id": 0,
+            "name": "All"
+        },
+        {
+            "id": 1,
+            "name": "William"
+        },
+        {
+            "id": 2,
+            "name": "Thomas"
+        },
+        {
+            "id": 3,
+            "name": "Max"
+        },
+        {
+            "id": 4,
+            "name": "Vincent"
+        }
+    ]
+}
