@@ -35,19 +35,22 @@ export class HomeComponent implements OnInit {
     // Get the address typed and set it in data service
     setIP(result): void {
         this.data.setIPAddress(result);
+        this.getMembers(); // important de set les membres d'abord pour pour retrouver les noms des owners dans set/fillContainers appelés dans getList
         this.getList();
-        this.getMembers();
     }
 
     // Function getList
     // Send a HTTP GET to the server to the route /items and set the list of items
+    // Then build the whole arborescence
     getList(): void {
         let request: HttpRequestOptions = {url: "http://" + this.data.getIPServer() + "/items", method: "GET", dontFollowRedirects: false};
         getJSON(request).then((r: any) => {
-            // Need to update the items in the data service (maybe sort parents / children)
-            // ...
+            // Update the items in the data service (maybe sort parents / children)
+            this.data.setContainers(r);
+            this.data.fillContainers(r);
+            console.log("new containers:", this.data.getContainers());
             // Update the list in this component
-            this.containers = r;
+            this.containers = this.data.getContainers();
         }, (e) => {
             console.log(e);
         });
@@ -60,7 +63,7 @@ export class HomeComponent implements OnInit {
         getJSON(request).then((r: Array<{id:number, name:string}>) => {
             // change in the data service
             this.data.setMembers(r);
-            // need to update the members component with the new members
+            // Update the members component with the new members
             // --> Done in the app.component when tab changes
         }, (e) => {
             console.log(e);
@@ -77,13 +80,35 @@ export class HomeComponent implements OnInit {
         .then((dialogResult: Object) => {
             this.result = dialogResult;
             if(this.result) {
-                let newContainer: IDataContainer = {id: 999, name: this.result.newContainer, listItems: new Array<IDataContainer>(), owner: {id:999, name:this.result.owner}}
-                this.containers.push(newContainer);
+                // Write the new item in the server
+                request({
+                    url: "http://" + this.data.getIPServer() + "/item/add",
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    content: JSON.stringify({
+                        owner: this.data.getOwnerFromName(this.result.owner).id,
+                        name: this.result.newContainer,
+                        parent: 0
+                    })
+                }).then((response) => {
+                    // Get the new member added to the server with the id just generated
+                    const jsonResponse = response.content.toJSON();
+                    // Need to format the answer int the frontend format: with the name of the owner and not the id, and with an empty list of children
+                    console.log(jsonResponse.newItem);
+                    let newContainer = {
+                        id: jsonResponse.newItem.id,
+                        name: jsonResponse.newItem.name,
+                        owner: this.data.getOwnerFromId(jsonResponse.owner),
+                        listItems: new Array<IDataContainer>()
+                    }
+                    this.containers.push(newContainer);
+                }, (e) => {
+                });
             }
         })
     }
 
-    //App tour function
+    // App tour function
     startTour(){
         const stops = [
             {

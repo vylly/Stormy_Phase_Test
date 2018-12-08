@@ -1,13 +1,12 @@
 <ActionBar class="action-bar" title="title">
     <ActionItem icon="res://info" (tap)="startTour()"></ActionItem>
     <Label class="action-bar-title" text="List"></Label>
-   
-
 </ActionBar>
 
-<StackLayout class="page page-content">
-    <TextField #textIP hint="Server IP address" returnKeyType="done" (returnPress)="setIP(textIP.text)"></TextField>
-    <ListView [items]="containers" class="list-group" #feat1>
+
+<GridLayout class="page page-content" rows="50, *">
+    <TextField #textIP hint="Server IP address" returnKeyType="done" row="0" (returnPress)="setIP(textIP.text)"></TextField>
+    <ListView [items]="containers" row="1" class="list-group" #feat1>
         <ng-template let-container="item">
             <StackLayout class="list-group-item" [nsRouterLink]="['../container', container.id]">
                 <Label [text]="container.name" class="list-group-item-heading"></Label>
@@ -16,9 +15,9 @@
         </ng-template>
     </ListView>
 
-    <StackLayout>
+    <StackLayout row="1">
         <FAB (tap)="fabTap()" icon="res://add" class="fab-button" #feat2></FAB>
     </StackLayout>
     
-</StackLayout>
+</GridLayout>
 
