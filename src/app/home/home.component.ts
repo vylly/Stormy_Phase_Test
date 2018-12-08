@@ -44,7 +44,6 @@ export class HomeComponent implements OnInit {
     getList(): void {
         let request: HttpRequestOptions = {url: "http://" + this.data.getIPServer() + "/items", method: "GET", dontFollowRedirects: false};
         getJSON(request).then((r: any) => {
-            console.log("result from the get request on /items:", r);
             // Need to update the items in the data service (maybe sort parents / children)
             // ...
             // Update the list in this component
@@ -58,12 +57,11 @@ export class HomeComponent implements OnInit {
     // Send a HTTP GET to the server to the route /members and set the list of members
     getMembers(): void {
         let request: HttpRequestOptions = {url: "http://" + this.data.getIPServer() + "/members", method: "GET", dontFollowRedirects: false};
-        getJSON(request).then((r: any) => {
-            console.log("result from the get request on /members:", r);
+        getJSON(request).then((r: Array<{id:number, name:string}>) => {
             // change in the data service
             this.data.setMembers(r);
             // need to update the members component with the new members
-            // ...
+            // --> Done in the app.component when tab changes
         }, (e) => {
             console.log(e);
         });

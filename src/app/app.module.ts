@@ -9,6 +9,7 @@ import { ModalDialogService } from "nativescript-angular/modal-dialog";
 import { ModalViewComponent } from "./dialogContainer/dialogContainer.component";
 import { dialogBrowseComponent } from "./dialogBrowse/dialogBrowse.component";
 import { BrowseService } from "./browse/browse.service";
+import { SearchComponent } from "./search/search.component";
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { BrowseService } from "./browse/browse.service";
         AppComponent,
         ModalViewComponent,
         dialogBrowseComponent,
+        SearchComponent,
         ...COMPONENTS
     ],
     schemas: [
@@ -36,7 +38,8 @@ import { BrowseService } from "./browse/browse.service";
     ],
     providers: [
         ModalDialogService,
-        BrowseService
+        BrowseService,
+        SearchComponent
     ]
 })
 export class AppModule { }

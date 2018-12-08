@@ -119,8 +119,11 @@ export class DataService {
     getMemberList(): Array<IMember> {
         return this.members;
     }
-    setMembers(list): void {
-        this.members = list;
+    setMembers(list: IMember[]): void {
+        // Empty the current this.members
+        this.members.splice(0, this.members.length);
+        // Push all the new list
+        list.forEach(member => this.members.push(member));
     }
     getMember(id: number): IMember {
         return this.members.filter((member) => member.id === id)[0];

@@ -92,7 +92,7 @@ def addMember   ():
     listMembers.append(member)
     # write the new list in the database
     with open('data.json', 'w') as outfile:
-        json.dump(listItems, outfile)
+        json.dump({"items": listItems, "members": listMembers}, outfile)
     # return the new member, with the id just generated
     return jsonify({'newMember': member}), 201
 # ============================= ROUTES ============================

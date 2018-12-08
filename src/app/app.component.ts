@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { isAndroid } from "tns-core-modules/platform";
 import { BrowseService } from "./browse/browse.service";
+import { SearchComponent } from "./search/search.component";
 
 @Component({
     selector: "ns-app",
@@ -11,7 +12,8 @@ import { BrowseService } from "./browse/browse.service";
 export class AppComponent implements OnInit {
 
     constructor(
-        private browserService: BrowseService
+        private browserService: BrowseService,
+        private searchComponent: SearchComponent
     ) {
         // Use the component constructor to inject providers.
     }
@@ -34,6 +36,11 @@ export class AppComponent implements OnInit {
             this.browserService.toggle();
         } else {
             this.browserService.toggle();
+        }
+        
+        // Update the list of members by saying to the component to read data service
+        if(result==2) {
+            this.searchComponent.readListFromData();
         }
     }
 }
