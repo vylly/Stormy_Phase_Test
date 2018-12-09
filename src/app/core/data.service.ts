@@ -38,7 +38,8 @@ export class DataService {
         this.containers.splice(0, this.containers.length);
         list.forEach(item => {
             if(item.parent == 0) {
-                this.containers.push({id: item.id, name: item.name, owner: this.getOwnerFromId(item.owner), listItems: new Array<IDataContainer>()});
+                console.log("getMember(): ", this.getMember(item.owner));
+                this.containers.push({id: item.id, name: item.name, owner: this.getMember(item.owner), listItems: new Array<IDataContainer>()});
             }
         })
     }
@@ -49,7 +50,7 @@ export class DataService {
                 let parent = this.containers.find(element => {
                     return element.id == item.parent
                 });
-                parent.listItems.push({id: item.id, name: item.name, owner: this.getOwnerFromId(item.owner), listItems: new Array<IDataContainer>()});
+                parent.listItems.push({id: item.id, name: item.name, owner: this.getMember(item.owner), listItems: new Array<IDataContainer>()});
             }
         });
     }
@@ -67,6 +68,9 @@ export class DataService {
     getMember(id: number): IMember {
         return this.members.filter((member) => member.id === id)[0];
     }
+    getMemberFromName(name: string): IMember {
+        return this.members.filter((member) => member.name === name)[0];
+    }
 
     // IP address
     setIPAddress(add: String) {
@@ -75,18 +79,4 @@ export class DataService {
     getIPServer(): String {
         return this.IP_Server;
     }
-
-    // Find the member depending on its id
-    getOwnerFromId(id: number): IMember {
-        return this.members.find(member => {
-            return member.id == id;
-        })
-    }
-    // Find the member depending on its name
-    getOwnerFromName(name: string): IMember {
-        return this.members.find(member => {
-            return member.name == name;
-        })
-    }
-
 }

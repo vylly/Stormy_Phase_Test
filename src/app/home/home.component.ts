@@ -86,7 +86,7 @@ export class HomeComponent implements OnInit {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     content: JSON.stringify({
-                        owner: this.data.getOwnerFromName(this.result.owner).id,
+                        owner: this.data.getMemberFromName(this.result.owner).id,
                         name: this.result.newContainer,
                         parent: 0
                     })
@@ -95,12 +95,15 @@ export class HomeComponent implements OnInit {
                     const jsonResponse = response.content.toJSON();
                     // Need to format the answer int the frontend format: with the name of the owner and not the id, and with an empty list of children
                     console.log(jsonResponse.newItem);
+                    console.log("this.data.getMemberList()", this.data.getMemberList());
+                    console.log("owner get from id:", this.data.getMember(jsonResponse.owner))
                     let newContainer = {
                         id: jsonResponse.newItem.id,
                         name: jsonResponse.newItem.name,
-                        owner: this.data.getOwnerFromId(jsonResponse.owner),
+                        owner: this.data.getMember(jsonResponse.owner),
                         listItems: new Array<IDataContainer>()
                     }
+                    console.log("newContainer formatted:", newContainer);
                     this.containers.push(newContainer);
                 }, (e) => {
                 });
