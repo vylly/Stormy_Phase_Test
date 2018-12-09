@@ -87,7 +87,7 @@ export class DataService {
 
     // IP address
     setIPAddress(add: String) {
-        this.IP_Server = add;
+        this.IP_Server = add + ":5000";
     }
     getIPServer(): String {
         return this.IP_Server;

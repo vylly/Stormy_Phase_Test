@@ -100,4 +100,4 @@ def addMember   ():
 
 # --------------- run server ---------------
 if __name__ == '__main__':
-    app.run(debug=True, port=80, host="0.0.0.0") # IP address 0.0.0.0 makes the server externally visible
+    app.run(debug=True, host="0.0.0.0") # IP address 0.0.0.0 makes the server externally visible
