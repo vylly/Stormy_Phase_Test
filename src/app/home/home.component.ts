@@ -7,7 +7,6 @@ import { ModalViewComponent } from "../dialogContainer/dialogContainer.component
 import * as dialogs from "tns-core-modules/ui/dialogs";
 import { TextField } from "tns-core-modules/ui/text-field";
 import { request, getFile, getImage, getJSON, getString, HttpRequestOptions } from "tns-core-modules/http";
-import { SearchComponent } from "../search/search.component";
 
 
 @Component({
@@ -37,6 +36,7 @@ export class HomeComponent implements OnInit {
         this.data.setIPAddress(result);
         this.getMembers(); // important de set les membres d'abord pour pour retrouver les noms des owners dans set/fillContainers appelés dans getList
         this.getList();
+        console.log("container:", this.containers);
     }
 
     // Function getList
@@ -98,7 +98,7 @@ export class HomeComponent implements OnInit {
                         listItems: new Array<IDataContainer>()
                     }
                     // Add it to the containers in the data service just in case
-                    this.data.addContainer(newContainer);
+                    this.data.addContainer(newContainer, 0);
                 }, (e) => {
                 });
             }

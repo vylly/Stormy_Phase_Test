@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { DataService, IDataContainer} from "../core/data.service";
+import { DataService, IDataContainer } from "../core/data.service";
 import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
 import { ModalViewComponent } from "../dialogContainer/dialogContainer.component";
+import { request, getFile, getImage, getJSON, getString, HttpRequestOptions } from "tns-core-modules/http";
 
 /* ***********************************************************
 * Before you can navigate to this page from your app, you need to reference this page's module in the
@@ -17,36 +18,60 @@ import { ModalViewComponent } from "../dialogContainer/dialogContainer.component
     templateUrl: "./container.component.html"
 })
 export class ContainerComponent implements OnInit {
-  container: IDataContainer;
-  listItems: Array<IDataContainer>;
-  result;
+    container: IDataContainer;
+    listItems: Array<IDataContainer>;
+    result;
 
-  constructor(
-      private data: DataService,
-      private route: ActivatedRoute,
-      //private router: RouterExtensions,
-      private _modalService: ModalDialogService,
-      private _vcRef: ViewContainerRef
-  ) { }
+    constructor(
+        private data: DataService,
+        private route: ActivatedRoute,
+        //private router: RouterExtensions,
+        private _modalService: ModalDialogService,
+        private _vcRef: ViewContainerRef
+    ) { }
 
-  ngOnInit(): void {
-      const id = +this.route.snapshot.params.id;
-      this.container = this.data.getContainer(id);
-      this.listItems = this.container.listItems;
-  }
+    ngOnInit(): void {
+        const id = +this.route.snapshot.params.id;
+        this.container = this.data.getContainer(id);
+        this.listItems = this.container.listItems;
+    }
 
-  fabTap(): void {
-    const options: ModalDialogOptions = {
-        viewContainerRef: this._vcRef,
-        context: {members: this.data.getMemberList()}
-    };
+    fabTap(): void {
+        const options: ModalDialogOptions = {
+            viewContainerRef: this._vcRef,
+            context: { members: this.data.getMemberList() }
+        };
 
-    this._modalService.showModal(ModalViewComponent, options)
-    .then((dialogResult: Object) => {
-        this.result = dialogResult;
-        let newContainer: IDataContainer = {id: 999, name: this.result.newContainer, listItems: new Array<IDataContainer>(), owner: {id:999, name:this.result.owner}}
-        this.listItems.push(newContainer);
-    })
-}
+        this._modalService.showModal(ModalViewComponent, options)
+            .then((dialogResult: Object) => {
+                this.result = dialogResult;
+                if (this.result) {
+                    // Write the new item in the server
+                    request({
+                        url: "http://" + this.data.getIPServer() + "/item/add",
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        content: JSON.stringify({
+                            owner: this.data.getMemberFromName(this.result.owner).id,
+                            name: this.result.newContainer,
+                            parent: this.container.id
+                        })
+                    }).then((response) => {
+                        // Get the new member added to the server with the id just generated
+                        const jsonResponse = response.content.toJSON();
+                        // Need to format the answer int the frontend format: with the name of the owner and not the id, and with an empty list of children
+                        let newContainer = {
+                            id: jsonResponse.newItem.id,
+                            name: jsonResponse.newItem.name,
+                            owner: this.data.getMember(jsonResponse.newItem.owner),
+                            listItems: new Array<IDataContainer>()
+                        }
+                        // Add it to the containers in the data service
+                        this.data.addContainer(newContainer, this.container.id);
+                    }, (e) => {
+                    });
+                }
+            })
+    }
 
 }

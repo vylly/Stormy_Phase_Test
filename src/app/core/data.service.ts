@@ -53,9 +53,19 @@ export class DataService {
             }
         });
     }
-    // Add an container/item in the tree
-    addContainer(newC): void {
-        this.containers.push(newC);
+    // Add an container/item in the tree (only work with a 2-level tree) (si on veut faire une arborescence à niveau infini alors autant refaire un getContainers/fillContainers en redemandant tout au backend)
+    addContainer(newC: IDataContainer, parent: number): void {
+        if(parent == 0) {
+            console.log("container added", newC);
+            this.containers.push(newC);
+        } else {
+            console.log("parent = ", parent);
+            this.containers.forEach(cont => {
+                if(cont.id == parent) {
+                    cont.listItems.push(newC);
+                }
+            });   
+        }
     }
     
     // List of the members
