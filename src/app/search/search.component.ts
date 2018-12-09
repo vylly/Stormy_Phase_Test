@@ -22,11 +22,6 @@ export class SearchComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.readListFromData();
-    }
-
-    // Call the data service to set this.members (called when the tab is selected)
-    readListFromData(): void {
         this.members = this.memberService.getMemberList();
     }
 

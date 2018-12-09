@@ -37,10 +37,5 @@ export class AppComponent implements OnInit {
         } else {
             this.browserService.toggle();
         }
-        
-        // Update the list of members by saying to the component to read data service
-        if(result==2) {
-            this.searchComponent.readListFromData();
-        }
     }
 }

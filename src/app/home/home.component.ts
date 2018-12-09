@@ -48,7 +48,6 @@ export class HomeComponent implements OnInit {
             // Update the items in the data service (maybe sort parents / children)
             this.data.setContainers(r);
             this.data.fillContainers(r);
-            console.log("new containers:", this.data.getContainers());
             // Update the list in this component
             this.containers = this.data.getContainers();
         }, (e) => {
@@ -61,10 +60,8 @@ export class HomeComponent implements OnInit {
     getMembers(): void {
         let request: HttpRequestOptions = {url: "http://" + this.data.getIPServer() + "/members", method: "GET", dontFollowRedirects: false};
         getJSON(request).then((r: Array<{id:number, name:string}>) => {
-            // change in the data service
+            // Update the member list
             this.data.setMembers(r);
-            // Update the members component with the new members
-            // --> Done in the app.component when tab changes
         }, (e) => {
             console.log(e);
         });
@@ -94,17 +91,14 @@ export class HomeComponent implements OnInit {
                     // Get the new member added to the server with the id just generated
                     const jsonResponse = response.content.toJSON();
                     // Need to format the answer int the frontend format: with the name of the owner and not the id, and with an empty list of children
-                    console.log(jsonResponse.newItem);
-                    console.log("this.data.getMemberList()", this.data.getMemberList());
-                    console.log("owner get from id:", this.data.getMember(jsonResponse.owner))
                     let newContainer = {
                         id: jsonResponse.newItem.id,
                         name: jsonResponse.newItem.name,
-                        owner: this.data.getMember(jsonResponse.owner),
+                        owner: this.data.getMember(jsonResponse.newItem.owner),
                         listItems: new Array<IDataContainer>()
                     }
-                    console.log("newContainer formatted:", newContainer);
-                    this.containers.push(newContainer);
+                    // Add it to the containers in the data service just in case
+                    this.data.addContainer(newContainer);
                 }, (e) => {
                 });
             }

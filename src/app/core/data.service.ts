@@ -38,7 +38,6 @@ export class DataService {
         this.containers.splice(0, this.containers.length);
         list.forEach(item => {
             if(item.parent == 0) {
-                console.log("getMember(): ", this.getMember(item.owner));
                 this.containers.push({id: item.id, name: item.name, owner: this.getMember(item.owner), listItems: new Array<IDataContainer>()});
             }
         })
@@ -53,6 +52,10 @@ export class DataService {
                 parent.listItems.push({id: item.id, name: item.name, owner: this.getMember(item.owner), listItems: new Array<IDataContainer>()});
             }
         });
+    }
+    // Add an container/item in the tree
+    addContainer(newC): void {
+        this.containers.push(newC);
     }
     
     // List of the members
