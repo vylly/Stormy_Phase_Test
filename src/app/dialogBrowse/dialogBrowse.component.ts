@@ -17,6 +17,9 @@ export class dialogBrowseComponent {
     //List of containers name
     private objectsNames: Array<String> = [];
 
+    //Path to current container displayed
+    // public objectPath: Array<IDataContainer> = [];
+
     //List of name shown in UI component
     public listContainers: Observable<Array<string>>;
 
@@ -34,6 +37,7 @@ export class dialogBrowseComponent {
         private _params: ModalDialogParams,
         private data : DataService
         ) {
+
         //Receive list of containers in its purest form
         this.objects =  _params.context.objects
 
@@ -56,27 +60,38 @@ export class dialogBrowseComponent {
     //When user taps on selected item in ListPicker, 
     public onTap(args) {
         console.log("onTap() called");
-        console.log("We wish to display : Childs of" + this.picked.name + " with id : " + this.picked.id);
+        console.log("We wish to display childs of : " + this.picked.name + " with id : " + this.picked.id);
 
         //If the selected item has childs, display it
-        //if(this.picked.getContainers())
-        console.log(this.data.getListItems(this.picked.id))
-        //Clear array
-        this.objectsNames = [];
-        this.subscr.next([...this.objectsNames]);
-        //We add all childs of the selected container in the listPicker
-        for (let i = 0; i<this.data.getListItems(this.picked.id).length; i++) {
-            this.objectsNames.push(this.data.getListItems(this.picked.id)[i].name);
+        //console.log(this.data.getListItems(this.picked.id).length)
+        if(this.picked.listItems.length != 0)
+        {
+            console.log(this.picked.listItems)
+            //Clear array
+            this.objectsNames = [];
+            this.objects = [];
+            this.subscr.next([...this.objectsNames]);
+            //We add all childs of the selected container in the listPicker
+            for (let i = 0; i<this.data.getListItems(this.picked.id).length; i++) {
+                this.objectsNames.push(this.data.getListItems(this.picked.id)[i].name);
+                this.objects.push(this.data.getListItems(this.picked.id)[i]);
+            }
+            console.log(this.objectsNames); 
+            //Update selected container
+            let picker = <ListPicker>args.object;
+            this.picked = this.objects[picker.selectedIndex];
+            this.subscr.next([...this.objectsNames]);
+
+            //Add clicked component to path
+            //this.objectPath.push()
+        } else {
+            console.log("Containers has no childs !")
         }
-        //If not, do nothing
-        //else
-        console.log(this.objectsNames)
-        this.subscr.next([...this.objectsNames]);
     }
 
     public selectContainer(args) {
-        console.log("selectContainer");
-        
+        console.log("selectContainer()");
+        //Todo
     }
 
     //Detects change of selected item (is called at boot)
