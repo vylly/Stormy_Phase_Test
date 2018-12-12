@@ -34,8 +34,7 @@ export class HomeComponent implements OnInit {
     // Get the address typed and set it in data service
     setIP(result): void {
         this.data.setIPAddress(result);
-        this.getMembers(); // important de set les membres d'abord pour pour retrouver les noms des owners dans set/fillContainers appelés dans getList
-        this.getList();
+        this.getMembers(); // getList is called in this function
         console.log("container:", this.containers);
     }
 
@@ -62,6 +61,8 @@ export class HomeComponent implements OnInit {
         getJSON(request).then((r: Array<{id:number, name:string}>) => {
             // Update the member list
             this.data.setMembers(r);
+            // We request the items only when the members are set (because we need to find the owner)
+            this.getList();
         }, (e) => {
             console.log(e);
         });
@@ -87,7 +88,8 @@ export class HomeComponent implements OnInit {
                         name: this.result.newContainer,
                         parent: 0
                     })
-                }).then((response) => {
+                }).then((response) => this.data.addContainerFromServer, (e) => {});
+                    /*
                     // Get the new member added to the server with the id just generated
                     const jsonResponse = response.content.toJSON();
                     // Need to format the answer int the frontend format: with the name of the owner and not the id, and with an empty list of children
@@ -101,6 +103,7 @@ export class HomeComponent implements OnInit {
                     this.data.addContainer(newContainer, 0);
                 }, (e) => {
                 });
+                */
             }
         })
     }
