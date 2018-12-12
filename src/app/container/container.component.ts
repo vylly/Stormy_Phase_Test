@@ -56,20 +56,7 @@ export class ContainerComponent implements OnInit {
                             name: this.result.newContainer,
                             parent: this.container.id
                         })
-                    }).then((response) => {
-                        // Get the new member added to the server with the id just generated
-                        const jsonResponse = response.content.toJSON();
-                        // Need to format the answer int the frontend format: with the name of the owner and not the id, and with an empty list of children
-                        let newContainer = {
-                            id: jsonResponse.newItem.id,
-                            name: jsonResponse.newItem.name,
-                            owner: this.data.getMember(jsonResponse.newItem.owner),
-                            listItems: new Array<IDataContainer>()
-                        }
-                        // Add it to the containers in the data service
-                        this.data.addContainer(newContainer, this.container.id);
-                    }, (e) => {
-                    });
+                    }).then((response) => this.data.addContainerFromServer, (e) => {});
                 }
             })
     }

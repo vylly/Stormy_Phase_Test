@@ -2,7 +2,8 @@ import { Component} from "@angular/core";
 import { ModalDialogParams } from "nativescript-angular/modal-dialog";
 import { ListPicker } from "tns-core-modules/ui/list-picker";
 import { DataService,IDataContainer } from "../core/data.service";
-import { Observable, from } from "rxjs";
+import { Observable } from "rxjs";
+import { request, getJSON, HttpRequestOptions } from "tns-core-modules/http";
 
 @Component({
     selector: "modal-content",
@@ -102,7 +103,7 @@ export class dialogBrowseComponent {
             //Add clicked component to path
             //this.objectPath.push()
         } else {
-            console.log("Containers has no childs !")
+            console.log("Containers has no childs !!!")
         }
     }
 
@@ -114,9 +115,23 @@ export class dialogBrowseComponent {
     }
 
     //To close the dialog, call the closeCallback function of the dialog params.
-    public close(result: string) {
+    public close(result : string) {
+        console.log("result:" + result);
         if(result) {
-            this.answer = {owner: this.picked, newContainer: result}
+            this.answer = {owner: 'All', newContainer: result}
+
+            //Write the new item in the server
+            request({
+                url: "http://" + this.data.getIPServer() + "/item/add",
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                content: JSON.stringify({
+                    //owner: this.data.getMemberFromName(this.result.owner).id
+                    owner : this.data.getMemberFromName('All').id,
+                    name: result,
+                    parent: 0
+                })
+            }).then((response) => this.data.addContainerFromServer, (e) => {});
         } else {
             this.answer = null;
         }
