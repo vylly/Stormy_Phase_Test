@@ -1,7 +1,11 @@
 <StackLayout margin="24" horizontalAlignment="center" verticalAlignment="center">
     <StackLayout>
         <Label [text]="prompt1"></Label>
-        <ListPicker [items]="listContainers | async" selectedIndex=0 (selectedIndexChange)=selectedIndexChanged($event) (tap)="onTap($event)" class="p-15"></ListPicker>
+        <FlexboxLayout alignItems="center">
+            <Button text="<" (tap)="up($event)" class="buttonBrowser" height="50" width="50"></Button>
+            <ListPicker [items]="listContainers | async" selectedIndex=0 (selectedIndexChange)=selectedIndexChanged($event) (tap)="onTap($event)" width="200" class="p-15"></ListPicker>
+            <Button text=">" (tap)="down($event)" class="buttonBrowser" width="50" height="50"></Button>
+        </FlexboxLayout>
         <Button text="I want to scan the container" (tap)="selectContainer($event)"></Button>
         <Label [text]="prompt2"></Label>
         <TextField #nameItem hint="Name of the object"></TextField>

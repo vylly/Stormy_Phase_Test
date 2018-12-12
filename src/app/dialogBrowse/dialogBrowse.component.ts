@@ -60,6 +60,23 @@ export class dialogBrowseComponent {
     //When user taps on selected item in ListPicker, 
     public onTap(args) {
         console.log("onTap() called");
+        
+    }
+
+    public selectContainer(args) {
+        console.log("selectContainer()");
+        //Todo
+    }
+
+    //Called when click on left arrow (access to parent container)
+    public up() {
+        console.log("We wish to display parent of : " + this.picked.name + " with id : " + this.picked.id);
+
+        //If the selected item has parent, display it
+    }
+
+    //Called when click on right arrow (access to child container)
+    public down(args) { 
         console.log("We wish to display childs of : " + this.picked.name + " with id : " + this.picked.id);
 
         //If the selected item has childs, display it
@@ -87,11 +104,6 @@ export class dialogBrowseComponent {
         } else {
             console.log("Containers has no childs !")
         }
-    }
-
-    public selectContainer(args) {
-        console.log("selectContainer()");
-        //Todo
     }
 
     //Detects change of selected item (is called at boot)
