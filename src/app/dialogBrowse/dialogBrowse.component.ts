@@ -1,58 +1,93 @@
 import { Component} from "@angular/core";
 import { ModalDialogParams } from "nativescript-angular/modal-dialog";
-import { IMember } from "../core/data.service";
 import { ListPicker } from "tns-core-modules/ui/list-picker";
+import { DataService,IDataContainer } from "../core/data.service";
+import { Observable, from } from "rxjs";
 
 @Component({
     selector: "modal-content",
-    template: `
-    <StackLayout margin="24" horizontalAlignment="center" verticalAlignment="center">
-        <StackLayout>
-            <Label [text]="prompt1"></Label>
-            <ListPicker [items]="listObjects" selectedIndex=0 (selectedIndexChange)=selectedIndexChanged($event) class="p-15"></ListPicker>
-            <Button text="I want to scan the container" (tap)="selectContainer()"></Button>
-            <Label [text]="prompt2"></Label>
-            <TextField #nameItem hint="Name of the object"></TextField>
-            <StackLayout orientation="horizontal" marginTop="12">
-                <Button text="ok" (tap)="close(nameItem.text)"></Button>
-                <Button text="cancel" (tap)="close()"></Button>
-            </StackLayout>
-
-        </StackLayout>
-    </StackLayout>
-  `
+    moduleId: module.id,
+    templateUrl: "./dialogBrowse.component.html"
 })
 
 export class dialogBrowseComponent {
-    public objects: Array<IMember> = [];
-    public prompt1: string = "Select the location of the new object";
+
+    //List of containers
+    private objects: Array<IDataContainer> = [];
+    //List of containers name
+    private objectsNames: Array<String> = [];
+
+    //List of name shown in UI component
+    public listContainers: Observable<Array<string>>;
+
+    public prompt1: string = "Select location of the new object";
     public prompt2: string = "Type the name of the new object/container";
-    public listObjects: Array<string> = [];
-    public picked: string;
+    
+    //Current selected container
+    public picked: IDataContainer;
     public answer;
 
-    constructor(private _params: ModalDialogParams) {
-        //objects = list of containers
-        this.objects = _params.context.objects;
-        //Pushing all containers in property listObjets of the dialog
-        for (let i = 0; i<this.objects.length; i++) {
-            this.listObjects.push(this.objects[i].name);
-        }
-	}
+    private subscr;
+    selectedLocationIndex = 0;
 
-    public selectContainer() {
-        console.log("TODO");
+    constructor(
+        private _params: ModalDialogParams,
+        private data : DataService
+        ) {
+        //Receive list of containers in its purest form
+        this.objects =  _params.context.objects
+
+        //Extract names from the list 
+        for (let i = 0; i<this.objects.length; i++) {
+            this.objectsNames.push(this.objects[i].name);
+        }
+        
+        //Watch for changes in the list of names
+        this.listContainers = Observable.create(subscriber => {
+            this.subscr = subscriber;
+            subscriber.next(this.objectsNames);
+            return function () {
+                console.log("Unsubscribe calleed!!!");
+            };
+            
+        });
     }
+    
+    //When user taps on selected item in ListPicker, 
+    public onTap(args) {
+        console.log("onTap() called");
+        console.log("We wish to display : Childs of" + this.picked.name + " with id : " + this.picked.id);
+
+        //If the selected item has childs, display it
+        //if(this.picked.getContainers())
+        console.log(this.data.getListItems(this.picked.id))
+        //Clear array
+        this.objectsNames = [];
+        this.subscr.next([...this.objectsNames]);
+        //We add all childs of the selected container in the listPicker
+        for (let i = 0; i<this.data.getListItems(this.picked.id).length; i++) {
+            this.objectsNames.push(this.data.getListItems(this.picked.id)[i].name);
+        }
+        //If not, do nothing
+        //else
+        console.log(this.objectsNames)
+        this.subscr.next([...this.objectsNames]);
+    }
+
+    public selectContainer(args) {
+        console.log("selectContainer");
+        
+    }
+
+    //Detects change of selected item (is called at boot)
     public selectedIndexChanged(args) {
         let picker = <ListPicker>args.object;
-        this.picked = this.listObjects[picker.selectedIndex];
+        this.picked = this.objects[picker.selectedIndex];
+        //console.log("selectIndexChanged(); picker.selectedIndex=" + picker.selectedIndex + " this.picked="+this.objects[picker.selectedIndex].name);
     }
 
     //To close the dialog, call the closeCallback function of the dialog params.
     public close(result: string) {
-        if(!this.picked) {
-            this.picked = "all";
-        }
         if(result) {
             this.answer = {owner: this.picked, newContainer: result}
         } else {

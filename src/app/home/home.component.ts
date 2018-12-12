@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
     setIP(result): void {
         this.data.setIPAddress(result);
         this.getMembers(); // important de set les membres d'abord pour pour retrouver les noms des owners dans set/fillContainers appelés dans getList
-        this.getList();
+        
         console.log("container:", this.containers);
     }
 
@@ -62,6 +62,7 @@ export class HomeComponent implements OnInit {
         getJSON(request).then((r: Array<{id:number, name:string}>) => {
             // Update the member list
             this.data.setMembers(r);
+            this.getList();
         }, (e) => {
             console.log(e);
         });
