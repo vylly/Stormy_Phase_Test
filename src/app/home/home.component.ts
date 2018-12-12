@@ -34,9 +34,7 @@ export class HomeComponent implements OnInit {
     // Get the address typed and set it in data service
     setIP(result): void {
         this.data.setIPAddress(result);
-        console.log("Calling getMembers()")
         this.getMembers(); // getList is called in this function
-        console.log("container:", this.containers);
     }
 
     // Function getList
@@ -59,13 +57,11 @@ export class HomeComponent implements OnInit {
     // Fuction getMembers
     // Send a HTTP GET to the server to the route /members and set the list of members
     getMembers(): void {
-        console.log("in getMembers()")
         let request: HttpRequestOptions = {url: "http://" + this.data.getIPServer() + "/members", method: "GET", dontFollowRedirects: false};
         getJSON(request).then((r: Array<{id:number, name:string}>) => {
             // Update the member list
             this.data.setMembers(r);
             // We request the items only when the members are set (because we need to find the owner)
-            console.log("Calling getList()")
             this.getList();
             console.log("Now containers:", this.containers);
         }, (e) => {
