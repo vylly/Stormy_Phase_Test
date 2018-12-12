@@ -56,7 +56,6 @@ export class DataService {
     // Add an container/item in the tree (only work with a 2-level tree) (si on veut faire une arborescence à niveau infini alors autant refaire un getContainers/fillContainers en redemandant tout au backend)
     addContainer(newC: IDataContainer, parent: number): void {
         if(parent == 0) {
-            console.log("container added", newC);
             this.containers.push(newC);
         } else {
             console.log("parent = ", parent);
@@ -91,5 +90,20 @@ export class DataService {
     }
     getIPServer(): String {
         return this.IP_Server;
+    }
+
+    // Add a container from the response of the server after POST request
+    addContainerFromServer(response): void {
+         // Get the new member added to the server with the id just generated
+         const jsonResponse = response.content.toJSON();
+         // Need to format the answer int the frontend format: with the name of the owner and not the id, and with an empty list of children
+         let newContainer = {
+             id: jsonResponse.newItem.id,
+             name: jsonResponse.newItem.name,
+             owner: this.getMember(jsonResponse.newItem.owner),
+             listItems: new Array<IDataContainer>()
+         }
+         // Add it to the containers in the data service just in case
+         this.addContainer(newContainer, 0);
     }
 }
