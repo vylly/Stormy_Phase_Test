@@ -1,12 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef } from "@angular/core";
 import { DataService, IDataContainer} from "../core/data.service";
-import { prompt, inputType, PromptOptions } from "tns-core-modules/ui/dialogs";
 import { AppTour } from 'nativescript-app-tour';
 import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
 import { ModalViewComponent } from "../dialogContainer/dialogContainer.component";
-import * as dialogs from "tns-core-modules/ui/dialogs";
-import { TextField } from "tns-core-modules/ui/text-field";
-import { request, getFile, getImage, getJSON, getString, HttpRequestOptions } from "tns-core-modules/http";
+import { request, getJSON, HttpRequestOptions } from "tns-core-modules/http";
 
 
 @Component({
