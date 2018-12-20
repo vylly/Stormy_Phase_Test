@@ -64,7 +64,7 @@ export class BrowseComponent implements OnInit {
                 // tell angular where (in the component tree) to load the dialog component.
                 viewContainerRef: this._vcRef,
                 // Parameters are specified in the context, here we provide the list of containers
-                context: {objects: this.data.getContainers()}
+                context: {objects: this.data.getContainers()},
             };
         
             

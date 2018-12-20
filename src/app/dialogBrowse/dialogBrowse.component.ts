@@ -34,6 +34,8 @@ export class dialogBrowseComponent {
     private subscr;
     selectedLocationIndex = 0;
 
+    private objectParent: IDataContainer;
+
     constructor(
         private _params: ModalDialogParams,
         private data : DataService
@@ -73,12 +75,16 @@ export class dialogBrowseComponent {
     public up() {
         console.log("We wish to display parent of : " + this.picked.name + " with id : " + this.picked.id);
 
+        this.objectParent = {id: 0, name: "root", listItems: new Array<IDataContainer>(), owner: this.data.getMemberList()[0]};
+
         //If the selected item has parent, display it
     }
 
     //Called when click on right arrow (access to child container)
     public down(args) { 
         console.log("We wish to display childs of : " + this.picked.name + " with id : " + this.picked.id);
+
+        this.objectParent = this.picked;
 
         //If the selected item has childs, display it
         //console.log(this.data.getListItems(this.picked.id).length)
@@ -129,9 +135,9 @@ export class dialogBrowseComponent {
                     //owner: this.data.getMemberFromName(this.result.owner).id
                     owner : this.data.getMemberFromName('All').id,
                     name: result,
-                    parent: 0
+                    parent: this.objectParent.id
                 })
-            }).then((response) => this.data.addContainerFromServer, (e) => {});
+            }).then((response) => this.data.addContainerFromServer(response), (e) => {});
         } else {
             this.answer = null;
         }

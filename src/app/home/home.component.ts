@@ -86,7 +86,7 @@ export class HomeComponent implements OnInit {
                         name: this.result.newContainer,
                         parent: 0
                     })
-                }).then((response) => this.data.addContainerFromServer, (e) => {});
+                }).then((response) => this.data.addContainerFromServer(response), (e) => {});
             }
         })
     }

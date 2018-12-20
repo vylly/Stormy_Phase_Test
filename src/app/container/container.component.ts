@@ -56,7 +56,7 @@ export class ContainerComponent implements OnInit {
                             name: this.result.newContainer,
                             parent: this.container.id
                         })
-                    }).then((response) => this.data.addContainerFromServer, (e) => {});
+                    }).then((response) => this.data.addContainerFromServer(response), (e) => {});
                 }
             })
     }

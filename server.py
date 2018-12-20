@@ -61,6 +61,7 @@ def getfromnameMember(nameMember):
     return jsonify(selectedMembers)
 
 # Route /item/add : method post, add a new item to the database
+# JSON needed : { "name": "abcde", "parent": 45, "owner": 12}
 @app.route('/item/add', methods=['POST'])
 def addItem():
     if not request.json or not 'name' in request.json:
@@ -80,6 +81,7 @@ def addItem():
     return jsonify({'newItem': item}), 201
 
 # Route /member/add : method post, add a new item to the database
+# JSON needed : { "name": "abcde"}
 @app.route('/member/add', methods=['POST'])
 def addMember   ():
     if not request.json or not 'name' in request.json:
@@ -95,6 +97,39 @@ def addMember   ():
         json.dump({"items": listItems, "members": listMembers}, outfile)
     # return the new member, with the id just generated
     return jsonify({'newMember': member}), 201
+
+# Route /item/remove : method post, remove an item from the database
+# JSON needed : { "idList" : [id1, id2, id3]}
+@app.route('/item/remove', methods=['POST'])
+def removeItem():
+    global listItems
+    if not request.json:
+        abort(400)
+    idsToRemove = request.json["idList"] # array (containing the id of the item and the id of its children)
+    # delete the items from the list
+    for ID in idsToRemove:
+        listItems = [item for item in listItems if not (item["id"] == ID)]
+    # write the new list in the database
+    with open('data.json', 'w') as outfile:
+        json.dump({"items": listItems, "members": listMembers}, outfile)
+    
+    return jsonify({'ok': 'ok'}), 201
+
+# Route /member/remove : method post, remove a member from the database
+# JSON needed : { "id" : id}
+@app.route('/member/remove', methods=['POST'])
+def removeMember():
+    global listMembers
+    if not request.json:
+        abort(400)
+    idToRemove = request.json["id"]
+    # delete the member from the list
+    listMembers = [m for m in listMembers if not (member["id"] == ID)]
+    # write the new list in the database
+    with open('data.json', 'w') as outfile:
+        json.dump({"items": listItems, "members": listMembers}, outfile)
+    
+    return jsonify({'ok': 'ok'}), 201
 # ============================= ROUTES ============================
 
 

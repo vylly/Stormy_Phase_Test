@@ -104,6 +104,6 @@ export class DataService {
              listItems: new Array<IDataContainer>()
          }
          // Add it to the containers in the data service just in case
-         this.addContainer(newContainer, 0);
+         this.addContainer(newContainer, jsonResponse.newItem.parent);
     }
 }
