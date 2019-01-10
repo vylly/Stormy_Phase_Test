@@ -1,17 +1,1 @@
-<TabView #tabView (selectedIndexChanged)="tabViewIndexChange( tabView.selectedIndex)" androidTabsPosition="bottom">
-    <page-router-outlet
-        *tabItem="{title: 'List', iconSource: getIconSource('list')}"
-        name="homeTab">
-    </page-router-outlet>
-
-    <page-router-outlet
-        *tabItem="{title: 'Item', iconSource: getIconSource('icon')}"
-        name="browseTab">
-    </page-router-outlet>
-
-    <page-router-outlet
-        *tabItem="{title: 'Members', iconSource: getIconSource('members')}"
-        name="searchTab">
-    </page-router-outlet>
-
-</TabView>
+<page-router-outlet actionBarVisibility="never"></page-router-outlet>
