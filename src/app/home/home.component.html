@@ -4,8 +4,7 @@
 </ActionBar>
 
 
-<GridLayout class="page page-content" rows="50, *">
-    <TextField #textIP hint="Server IP address" returnKeyType="done" row="0" (returnPress)="setIP(textIP.text)"></TextField>
+<GridLayout class="page page-content">
     <ListView [items]="containers" row="1" class="list-group" #feat1>
         <ng-template let-container="item">
             <StackLayout class="list-group-item" [nsRouterLink]="['../container', container.id]">

@@ -25,20 +25,14 @@ export class HomeComponent implements OnInit {
 
     ngOnInit(): void {
         this.containers = this.data.getContainers();
+        this.getMembers();
     }
 
-    // Function setIP called when the the 'enter' key is pressed in the TextField
-    // Get the address typed and set it in data service
-    setIP(result): void {
-        this.data.setIPAddress(result);
-        this.getMembers(); // getList is called in this function
-    }
 
     // Function getList
     // Send a HTTP GET to the server to the route /items and set the list of items
     // Then build the whole arborescence
     getList(): void {
-        console.log("in getList()")
         let request: HttpRequestOptions = {url: "http://" + this.data.getIPServer() + "/items", method: "GET", dontFollowRedirects: false};
         getJSON(request).then((r: any) => {
             // Update the items in the data service (maybe sort parents / children)

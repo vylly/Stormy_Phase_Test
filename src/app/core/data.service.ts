@@ -13,11 +13,17 @@ export interface IMember {
     name: string;
 }
 
+export class User {
+    email: string;
+    password: string;
+    confirmPassword: string;
+    id: number;
+}
 
 @Injectable()
 export class DataService {
 
-    protected IP_Server: String;
+    protected IP_Server: String = "51.38.68.118:5000"
 
     protected members = new Array<IMember>();
 
@@ -83,11 +89,7 @@ export class DataService {
     getMemberFromName(name: string): IMember {
         return this.members.filter((member) => member.name === name)[0];
     }
-
-    // IP address
-    setIPAddress(add: String) {
-        this.IP_Server = add + ":5000";
-    }
+    
     getIPServer(): String {
         return this.IP_Server;
     }

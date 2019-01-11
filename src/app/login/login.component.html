@@ -4,15 +4,15 @@
         <Image class="logo" src="res://logo"></Image>
 
         <StackLayout class="input-field">
-            <TextField class="input" hint="Email" keyboardType="email" autocorrect="false" autocapitalizationType="none"></TextField>
+			<TextField #email class="input" hint="Email" keyboardType="email" autocorrect="false" autocapitalizationType="none" (textChange)="onChangeEmail($event)" returnKeyType="next" (returnPress)="focusPassword()"></TextField>
         </StackLayout>
       
         <StackLayout class="input-field">
-            <TextField #password class="input" hint="Password" secure="true" [(ngModel)]="user.password" returnKeyType="done"></TextField>
+			<TextField #password class="input" hint="Password" secure="true" (textChange)="onChangePwd($event)" [returnKeyType]="isLoggingIn ? 'done' : 'next'" (returnPress)="focusConfirmPassword()"></TextField>
         </StackLayout>
 
         <StackLayout *ngIf="!isLoggingIn" class="input-field">
-            <TextField #confirmPassword class="input" hint="Confirm password" secure="true" [(ngModel)]="user.confirmPassword" returnKeyType="done"></TextField>
+			<TextField #confirmPassword class="input" hint="Confirm password" secure="true" (textChange)="onChangeConfPwd($event)" returnKeyType="done"></TextField>
           </StackLayout>
       
           <Button [text]="isLoggingIn ? 'Log In' : 'Sign Up'" (tap)="submit()" class="btn-primary"></Button>
