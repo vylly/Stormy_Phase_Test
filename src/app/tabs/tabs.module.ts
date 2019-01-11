@@ -62,6 +62,7 @@ import { ContainerComponent } from "../container/container.component";
         BrowseService,
         SearchComponent
     ],
+    entryComponents: [dialogBrowseComponent],
     schemas: [NO_ERRORS_SCHEMA]
 })
 export class TabsModule { }

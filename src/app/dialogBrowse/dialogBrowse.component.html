@@ -6,7 +6,7 @@
             <ListPicker [items]="listContainers | async" selectedIndex=0 (selectedIndexChange)=selectedIndexChanged($event) (tap)="onTap($event)" width="200" class="p-15"></ListPicker>
             <Button text=">" (tap)="down($event)" class="buttonBrowser" width="50" height="50"></Button>
         </FlexboxLayout>
-        <Button text="I want to scan the container" (tap)="selectContainer($event)"></Button>
+        <Button text="I want to scan the container " (tap)="selectContainer($event)"></Button>
         <Label [text]="prompt2"></Label>
         <TextField #nameItem hint="Name of the object"></TextField>
         <StackLayout orientation="horizontal" marginTop="12">
