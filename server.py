@@ -2,7 +2,10 @@
 from flask import *
 import json
 
-userID = 0
+json_data=open('data.json').read()
+data = json.loads(json_data)
+listItems = data["items"]
+listMembers = data["members"]
 
 app = Flask(__name__)
 
@@ -10,10 +13,6 @@ app = Flask(__name__)
 # Route / : get all the data (contains items and members)
 @app.route("/", methods=['GET'])
 def index():
-    json_data=open('data.json').read()
-    data = json.loads(json_data)
-    listItems = data["items"]
-    listMembers = data["members"]
     return jsonify({"items": listItems, "members": listMembers})
 
 # Route /items : get all the list of items
