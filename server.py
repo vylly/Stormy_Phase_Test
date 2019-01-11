@@ -124,7 +124,7 @@ def removeMember():
         abort(400)
     idToRemove = request.json["id"]
     # delete the member from the list
-    listMembers = [m for m in listMembers if not (m["id"] == ID)]
+    listMembers = [m for m in listMembers if not (m["id"] == idToRemove)]
     # write the new list in the database
     with open('data.json', 'w') as outfile:
         json.dump({"items": listItems, "members": listMembers}, outfile)
