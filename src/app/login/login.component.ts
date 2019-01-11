@@ -69,14 +69,44 @@ export class LoginComponent {
 
     // Test the password and email and log in the user
     login() {
-        // Need to send request to backend here to try to log in
-        this.routerExtension.navigate(["../tabs/default"])
+        request({
+            url: "http://" + this.dataService.getIPServer() + "/login",
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            content: JSON.stringify({
+                email: this.user.email,
+                password: this.user.password
+            })
+        }).then((response) => {
+            let id = response.content.toJSON().id;
+            if(id == -1) {
+                alert("Wrong email or password. Please retry.");
+            } else {
+                this.user.id = id;
+                this.routerExtension.navigate(["../tabs/default"])
+            }
+        }, (e) => {});
     }
 
     // Create the user in the backend and go to login again
     register() {
-        // Need to send request to backend here to create user
-        this.isLoggingIn = true;
+        request({
+            url: "http://" + this.dataService.getIPServer() + "/signup",
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            content: JSON.stringify({
+                email: this.user.email,
+                password: this.user.password
+            })
+        }).then((response) => {
+            let id = response.content.toJSON().id;
+            if(id == -1) {
+                alert("Email already in use.");
+            } else {
+                this.user.id = id;
+                this.routerExtension.navigate(["../tabs/default"])
+            }
+        }, (e) => {});
     }
 
     focusPassword() {

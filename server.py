@@ -2,17 +2,18 @@
 from flask import *
 import json
 
-app = Flask(__name__)
+userID = 0
 
-json_data=open('data.json').read()
-data = json.loads(json_data)
-listItems = data["items"]
-listMembers = data["members"]
+app = Flask(__name__)
 
 # ============================= ROUTES ============================
 # Route / : get all the data (contains items and members)
 @app.route("/", methods=['GET'])
 def index():
+    json_data=open('data.json').read()
+    data = json.loads(json_data)
+    listItems = data["items"]
+    listMembers = data["members"]
     return jsonify({"items": listItems, "members": listMembers})
 
 # Route /items : get all the list of items
@@ -124,12 +125,58 @@ def removeMember():
         abort(400)
     idToRemove = request.json["id"]
     # delete the member from the list
-    listMembers = [m for m in listMembers if not (member["id"] == ID)]
+    listMembers = [m for m in listMembers if not (m["id"] == ID)]
     # write the new list in the database
     with open('data.json', 'w') as outfile:
         json.dump({"items": listItems, "members": listMembers}, outfile)
     
     return jsonify({'ok': 'ok'}), 201
+
+# Route /login : method post, try to login
+# JSON needed : { "email" : email, "password": password}
+# Return id of the user, id = -1 if user not found or password incorrect
+@app.route('/login', methods=['POST'])
+def login():
+    if not request.json:
+        abort(400)
+    email = request.json["email"]
+    pwd = request.json["password"]
+    # find the correct pwd in the database
+    users = json.loads(open('list-users.json').read())["users"]
+    # Reply if the pwd is correct or not and send the id
+    matching_users = [u for u in users if (u["email"] == email)]
+    if len(matching_users) > 0:
+        user = matching_users[0]
+        if user["password"] == pwd:
+            return jsonify({'id': user["id"]})
+    
+    return jsonify({'id': "-1"})
+
+# Route /signup : method post, try to login
+# JSON needed : { "email" : email, "password": password}
+# Return id of the user, id = -1 if email already in database
+@app.route('/signup', methods=['POST'])
+def signup():
+    if not request.json:
+        abort(400)
+    email = request.json["email"]
+    pwd = request.json["password"]
+    # check if account already exist
+    users = json.loads(open('list-users.json').read())["users"]
+    matching_users = [user for user in users if (user["email"] == email)]
+    if len(matching_users) > 0:
+        return jsonify({'id': '-1'})
+
+    # Generate the id
+    ids = [int(u['id']) for u in users]
+    newId = max(ids) + 1
+    # Add the new user and write in the json
+    users.append({'email': email, 'password': pwd, 'id': newId})
+    with open('list-users.json', 'w') as outfile:
+        json.dump({"users": users}, outfile)
+
+    # Reply with the id    
+    return jsonify({'id': newId})
 # ============================= ROUTES ============================
 
 
