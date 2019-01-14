@@ -15,11 +15,12 @@ export class dialogBrowseComponent {
 
     //List of containers
     private objects: Array<IDataContainer> = [];
+
     //List of containers name
     private objectsNames: Array<String> = [];
 
-    //Path to current container displayed
-    // public objectPath: Array<IDataContainer> = [];
+    //Path to picked
+    public pathToPicked = [0]
 
     //List of name shown in UI component
     public listContainers: Observable<Array<string>>;
@@ -73,17 +74,66 @@ export class dialogBrowseComponent {
 
     //Called when click on left arrow (access to parent container)
     public up() {
-        console.log("We wish to display parent of : " + this.picked.name + " with id : " + this.picked.id);
+        //console.log("We wish to display parent of : " + this.picked.name + " with id : " + this.picked.id);
+        
+        // --- If the size of the path is 1 : not possible to go up --- //
+        if(this.pathToPicked.length == 1) {
+            //Do nothing
+            //console.log("Cannot go up (this.pathToPicked.length == 1)")
+        
+        // --- If the size of the path is 2 : need to display the root --- //
+        } else if(this.pathToPicked.length == 2) {
+        
+            //console.log("this.pathToPicked.length == 2")
+            this.picked = this.objectParent;
 
-        this.objectParent = {id: 0, name: "root", listItems: new Array<IDataContainer>(), owner: this.data.getMemberList()[0]};
+            //Clear Array
+            this.objectsNames = [];
+            this.objects = [];
+            this.subscr.next([...this.objectsNames]);
 
-        //If the selected item has parent, display it
+            //Get the root (whole data)
+            this.objects = this.data.getContainers();
+            for (let i = 0; i<this.objects.length; i++) {
+                this.objectsNames.push(this.objects[i].name);
+            }
+            this.subscr.next([...this.objectsNames]);
+        
+            //Remove last element of path
+            this.pathToPicked.pop()
+            
+             
+
+        // --- If the size of the path is > 2 : need to display parent of picked --- //
+        } else {
+            console.log("this.pathToPicked.length > 2 SHOULD NOT APPEAR ATM")
+            this.picked = this.objectParent;
+            this.data.getContainer(this.picked.id)
+            
+            //Clear Array
+            this.objectsNames = [];
+            this.objects = [];
+            this.subscr.next([...this.objectsNames]);
+
+            //Populate array with first level items
+            for (let i = 0; i<this.data.getListItems(this.picked.id).length; i++) {
+                this.objectsNames.push(this.data.getListItems(this.picked.id)[i].name);
+                this.objects.push(this.data.getListItems(this.picked.id)[i]);
+            }
+            this.subscr.next([...this.objectsNames]);
+        }      
+        //console.log("pathToPicked : " + this.pathToPicked);
+
     }
 
     //Called when click on right arrow (access to child container)
     public down(args) { 
         console.log("We wish to display childs of : " + this.picked.name + " with id : " + this.picked.id);
 
+        //Add current ID to path
+        this.pathToPicked.push(this.picked.id);
+        console.log(this.pathToPicked);
+        //Update objectParent
         this.objectParent = this.picked;
 
         //If the selected item has childs, display it
@@ -102,10 +152,15 @@ export class dialogBrowseComponent {
             }
             console.log(this.objectsNames); 
             //Update selected container
-            let picker = <ListPicker>args.object;
-            this.picked = this.objects[picker.selectedIndex];
+            
+            //11/01/2018 Commenté cette ligne
+            //let picker = <ListPicker>args.object;
+
+            this.picked = this.objects[0];
             this.subscr.next([...this.objectsNames]);
 
+            //console.log("picker.selectedIndex" + picker.selectedIndex)
+            console.log("this.picked.id :" + this.picked.id)
             //Add clicked component to path
             //this.objectPath.push()
         } else {
@@ -143,5 +198,4 @@ export class dialogBrowseComponent {
         }
         this._params.closeCallback(this.answer);
   }
-
 }
