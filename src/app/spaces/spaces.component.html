@@ -1,0 +1,23 @@
+<ActionBar class="action-bar">
+    <Label class="action-bar-title" text="My Stormy Spaces"></Label>
+</ActionBar>
+
+<FlexboxLayout class="page">
+        <StackLayout class="form">
+    
+            <StackLayout class="input-field">
+                <ListPicker [items]="listNameSpaces" selectedIndex=0 (selectedIndexChange)=selectedIndexChanged($event)  class="p-15"></ListPicker>
+            </StackLayout>
+            <Button text="Go to this space" (tap)="onSubmitSpace()" class="btn-primary"></Button>
+          
+            <Label text="You can also create a new space here" class="label"></Label>
+    
+            <StackLayout *ngIf="!isLoggingIn" class="input-field">
+                <TextField  class="input" hint="Space name" returnKeyType="next" (textChange)="onTextChanged($event)"></TextField>
+            </StackLayout>
+            
+            <Button text="Create new space" (tap)="onCreate()" class="btn-primary"></Button>
+    
+        </StackLayout>
+
+    </FlexboxLayout>

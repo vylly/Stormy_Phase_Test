@@ -14,15 +14,39 @@ from database import init_db
 init_db()
 # --------------------------------------------------
 
+# -------------- Functions to parse the string containing spaces id -------------
+# stringToList : take a string with ids separated by ','
+# return a list of int containing the ids
+def stringToList(stringSpaces):
+    print("stringSpaces", stringSpaces)
+    listIdsString = stringSpaces.split(',')
+    listIds = [int(x) for x in listIdsString[1:-1]]
+    print("listIds parsed :", listIds)
+    return listIds
+# listToString : take a list of int and return a string with ids separated by ','
+def listToString(listIds):
+    stringSpaces = ","
+    for i in listIds:
+        stringSpaces = stringSpaces + str(i) + ","
+    print("stringSpaces parsed :", stringSpaces)
+    return stringSpaces
+# -------------------------------------------------------------------------------
+
 # ============================= ROUTES ============================
 # Route /space/add : create a new space
+# Need the name of the new space and the id of the user who created it {"name": name, "id": userID}
+# Return the new space
 @app.route("/space/add", methods=['POST'])
 def addSpace():
     from database import db_session
     from tables import Space, User
-    # Add the new space in the spaces table
+    # Create new space and add the new space in the spaces table
     new_space = Space(request.json["name"])
     db_session.add(new_space)
+    db_session.commit()
+    # Add the new space id to the list of spaces of the user
+    user = User.query.filter(User.id == request.json["id"]).first()
+    user.stringSpaces = user.stringSpaces + str(new_space.id) + ","
     db_session.commit()
     return jsonify({"space": {"name" : new_space.name, "id": new_space.id}})
 
@@ -37,20 +61,20 @@ def items():
         output.append({'id':item.id, 'name': item.name, 'parent': item.parent, 'owner': item.userID, 'space': item.space})
     return jsonify({'listItems' : output})
 
-# Route /members : get all the list of members of a space
+# Route /members : get all the list of members allowed in a space
 # Need {"space" : spaceID }
 @app.route('/members', methods=['GET', 'POST'])
 def members():
     space = request.json["space"]
     from tables import User
-    listMembers = User.query.filter(User.space == int(space))
+    listMembers = User.query.filter(User.stringSpaces.contains("," + str(space) + ","))
     output = []
     for user in listMembers:
-        output.append({'id':user.id, 'name': user.name, 'space': user.space})
+        output.append({'id': user.id, 'name': user.name})
     return jsonify({'listMembers' : output})
 
 # Route /item/add : method post, add a new item to the database
-# JSON needed : { "name": "abcde", "parent": 45, "owner": 12}
+# JSON needed : { "name": "abcde", "parent": 45, "owner": 12, "space": 1}
 @app.route('/item/add', methods=['POST'])
 def addItem():
     space = request.json["space"]
@@ -64,6 +88,7 @@ def addItem():
     # return the new item, with the id just generated
     return jsonify({'newItem': {'id': new_item.id, 'name': new_item.name, 'parent': new_item.parent, 'owner': new_item.userID}}), 201
 
+'''
 # Route /member/add : method post, add a new member to a space
 # JSON needed : { "email": email, "space": spaceID}
 @app.route('/member/add', methods=['POST'])
@@ -75,6 +100,7 @@ def addMember():
     user.space = request.json["space"]
     db_session.commit()
     return jsonify({'newMember': user.id, 'space': user.space}), 201
+'''
 
 # Route /item/remove : method post, remove an item from the database
 # JSON needed : { "idList" : [id1, id2, id3]}
@@ -122,7 +148,7 @@ def login():
     if user != None:
         # Reply if the pwd is correct or not and send the id
         if pwd == user.password:
-            return jsonify({'space' : user.space, 'id' : user.id, 'name' : user.name})
+            return jsonify({'spaces' : stringToList(user.stringSpaces), 'id' : user.id, 'name' : user.name})
         else:
             return jsonify({'id': "-1"})
     else:
@@ -139,20 +165,20 @@ def signup():
     # check if account already exist
     from database import db_session
     from tables import User, Space
-    for row in User.query.all():
-        if row.email == email:
-            return jsonify({'id': '-1'})
-    # Create new space for the new user
-    # Add the new space in the spaces table
+    alreadyUser = User.query.filter(User.email == email).first()
+    if(alreadyUser != None):
+        return jsonify({'id': '-1'})
+    # Create new space for the new user and add the new space in the spaces table
     new_space = Space("My Stormy")
     db_session.add(new_space)
     db_session.commit()
     # Add new user and return it
-    new_user = User(email=request.json["email"], password=request.json["password"], name=request.json["name"], space=new_space.id)
+    spacesList = [new_space.id]
+    new_user = User(email=request.json["email"], password=request.json["password"], name=request.json["name"], stringSpaces=listToString(spacesList))
     db_session.add(new_user)
     db_session.commit()
     db_session.refresh(new_user)
-    return jsonify({'id': (int)(new_user.id), 'email': new_user.email, 'name' : new_user.name, 'space': new_user.space})
+    return jsonify({'id': (int)(new_user.id), 'email': new_user.email, 'name' : new_user.name, 'spaces': stringToList(new_user.stringSpaces)})
 # ============================= ROUTES ============================
 
 

@@ -6,6 +6,7 @@
     <ListView [items]="members" class="list-group">
         <ng-template let-member="item">
             <Label [nsRouterLink]="['../member', member.id]" [text]="member.name" class="list-group-item"></Label>
+            <!-- <Label [text]="member.email" class="list-group-item-text" textWrap="true"></Label>-->
         </ng-template>
     </ListView>
 

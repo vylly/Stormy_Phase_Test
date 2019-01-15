@@ -1,0 +1,40 @@
+.page {
+    align-items: center;
+    flex-direction: column;
+  }
+  .form {
+    margin-left: 30;
+    margin-right: 30;
+    flex-grow: 2;
+    vertical-align: middle;
+  }
+  
+  .input-field {
+    margin-bottom: 25;
+  }
+  .input {
+    font-size: 18;
+    placeholder-color: #A8A8A8;
+  }
+  
+  .btn-primary {
+    height: 40;
+    margin: 30 5 15 5;
+    background-color:#292179;
+    border-radius: 5;
+    font-size: 15;
+    font-weight: 600;
+  }
+  .label {
+    horizontal-align: center;
+    color: #292179;
+    margin-top: 20;
+    font-size: 16;
+  }
+  .sign-up-label {
+    margin-bottom: 20;
+  }
+  .bold {
+    color: #000000; 
+  }
+  

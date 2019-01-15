@@ -196,7 +196,7 @@ export class dialogBrowseComponent {
                     owner: this.data.getCurrentUser().id,
                     name: result,
                     parent: this.objectParent.id,
-                    space: this.data.getCurrentUser().space
+                    space: this.data.getCurrentUser().currentSpace.id
                 })
             }).then((response) => this.data.addContainerFromServer(response), (e) => {});
         } else {

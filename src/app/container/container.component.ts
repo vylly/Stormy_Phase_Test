@@ -55,7 +55,7 @@ export class ContainerComponent implements OnInit {
                             owner: this.data.getMemberFromName(this.result.owner).id,
                             name: this.result.newContainer,
                             parent: this.container.id,
-                            space: this.data.getCurrentUser().space
+                            space: this.data.getCurrentUser().currentSpace.id
                         })
                     }).then((response) => this.data.addContainerFromServer(response), (e) => {});
                 }

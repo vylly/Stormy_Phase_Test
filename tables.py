@@ -8,16 +8,16 @@ class User(Base):
     email = Column(String)
     password = Column(String)
     name = Column(String)
-    space = Column(Integer)
+    stringSpaces = Column(String)
 
-    def __init__(self, email=None, password=None, name=None, space=None):
+    def __init__(self, email=None, password=None, name=None, stringSpaces=None):
         self.email = email
         self.password = password
         self.name = name
-        self.space = space
+        self.stringSpaces = stringSpaces
 
     def __repr__(self):
-        return '<User %s, %s. Space : %d>' % (self.email, self.name, self.space)
+        return '<User %s, %s. Space : %s>' % (self.email, self.name, self.stringSpaces)
 
 class Item(Base):
     __tablename__ = 'items'

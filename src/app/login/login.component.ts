@@ -5,6 +5,7 @@ import { Page, isUserInteractionEnabledProperty } from "tns-core-modules/ui/page
 import { DataService, User } from "../core/data.service";
 import { TextField } from "tns-core-modules/ui/text-field";
 import { request, getJSON, HttpRequestOptions } from "tns-core-modules/http";
+import {ISpace } from "../core/data.service"; 
 
 
 @Component({
@@ -24,6 +25,7 @@ export class LoginComponent {
     constructor(private routerExtension: RouterExtensions, private page: Page, private dataService: DataService) {
         this.page.actionBarHidden = true;
         this.user = new User();
+        this.user.spaces = new Array<ISpace>();
     };
 
     // Toggle isLoggingIn depending on if the user try to log in or to sign up
@@ -86,9 +88,10 @@ export class LoginComponent {
             } else {
                 this.user.id = id;
                 this.user.name = name;
-                this.user.space = space;
+                let listSpaces = response.content.toJSON().spaces;
+                listSpaces.forEach(sp => this.user.spaces.push({id: sp, name: "Stormy "+sp})); // need to get the name here from the back end
                 this.dataService.setCurrentUser(this.user);
-                this.routerExtension.navigate(["../tabs/default"])
+                this.routerExtension.navigate(["../spaces"], {clearHistory: true});
             }
         }, (e) => {});
     }
@@ -106,14 +109,14 @@ export class LoginComponent {
             })
         }).then((response) => {
             let id = response.content.toJSON().id;
-            let space = response.content.toJSON().space;
             if(id == -1) {
                 alert("Email already in use.");
             } else {
+                let listSpaces = response.content.toJSON().spaces;
+                listSpaces.forEach(sp => this.user.spaces.push({id: sp, name: "Stormy "+sp})); // need to get the name here from the back end
                 this.user.id = id;
-                this.user.space = space;
                 this.dataService.setCurrentUser(this.user);
-                this.routerExtension.navigate(["../tabs/default"])
+                this.routerExtension.navigate(["../spaces"], {clearHistory: true});
             }
         }, (e) => {});
     }

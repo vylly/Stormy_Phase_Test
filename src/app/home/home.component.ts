@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             content: JSON.stringify({
-                space: this.user.space
+                space: this.user.currentSpace.id
             })
         }).then((response) => {
             // Update the items in the data service
@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             content: JSON.stringify({
-                space: this.user.space
+                space: this.user.currentSpace.id
             })
         }).then((response) => {
             // Update the member list
@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit {
                             owner: this.data.getMemberFromName(this.result.owner).id,
                             name: this.result.newContainer,
                             parent: 0,
-                            space: this.user.space
+                            space: this.user.currentSpace.id
                         })
                     }).then((response) => this.data.addContainerFromServer(response), (e) => { });
                 }
