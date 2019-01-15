@@ -4,7 +4,11 @@
         <Image class="logo" src="res://logo"></Image>
 
         <StackLayout class="input-field">
-			<TextField #email class="input" hint="Email" keyboardType="email" autocorrect="false" autocapitalizationType="none" (textChange)="onChangeEmail($event)" returnKeyType="next" (returnPress)="focusPassword()"></TextField>
+			    <TextField #email class="input" hint="Email" keyboardType="email" autocorrect="false" autocapitalizationType="none" (textChange)="onChangeEmail($event)" returnKeyType="next"></TextField>
+        </StackLayout>
+
+        <StackLayout *ngIf="!isLoggingIn" class="input-field">
+          <TextField #name class="input" hint="Name" autocorrect="false" autocapitalizationType="none" (textChange)="onChangeName($event)" returnKeyType="next" (returnPress)="focusPassword()"></TextField>
         </StackLayout>
       
         <StackLayout class="input-field">

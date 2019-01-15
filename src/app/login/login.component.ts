@@ -79,10 +79,15 @@ export class LoginComponent {
             })
         }).then((response) => {
             let id = response.content.toJSON().id;
+            let name = response.content.toJSON().name;
+            let space = response.content.toJSON().space;
             if(id == -1) {
                 alert("Wrong email or password. Please retry.");
             } else {
                 this.user.id = id;
+                this.user.name = name;
+                this.user.space = space;
+                this.dataService.setCurrentUser(this.user);
                 this.routerExtension.navigate(["../tabs/default"])
             }
         }, (e) => {});
@@ -96,14 +101,18 @@ export class LoginComponent {
             headers: { "Content-Type": "application/json" },
             content: JSON.stringify({
                 email: this.user.email,
-                password: this.user.password
+                password: this.user.password,
+                name: this.user.name
             })
         }).then((response) => {
             let id = response.content.toJSON().id;
+            let space = response.content.toJSON().space;
             if(id == -1) {
                 alert("Email already in use.");
             } else {
                 this.user.id = id;
+                this.user.space = space;
+                this.dataService.setCurrentUser(this.user);
                 this.routerExtension.navigate(["../tabs/default"])
             }
         }, (e) => {});
@@ -122,6 +131,10 @@ export class LoginComponent {
     onChangeEmail(args) {
         let textField = <TextField>args.object;
         this.user.email = textField.text;
+    }
+    onChangeName(args) {
+        let textField = <TextField>args.object;
+        this.user.name = textField.text;
     }
     onChangePwd(args) {
         let textField = <TextField>args.object;

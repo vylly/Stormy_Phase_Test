@@ -54,7 +54,8 @@ export class ContainerComponent implements OnInit {
                         content: JSON.stringify({
                             owner: this.data.getMemberFromName(this.result.owner).id,
                             name: this.result.newContainer,
-                            parent: this.container.id
+                            parent: this.container.id,
+                            space: this.data.getCurrentUser().space
                         })
                     }).then((response) => this.data.addContainerFromServer(response), (e) => {});
                 }

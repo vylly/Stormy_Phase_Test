@@ -42,6 +42,9 @@ export class dialogBrowseComponent {
         private data : DataService
         ) {
 
+        // just in case we create an object directly
+        this.objectParent = {id:0, name:"root", listItems: new Array<IDataContainer>(), owner:this.data.getMemberList()[0]};
+
         //Receive list of containers in its purest form
         this.objects =  _params.context.objects
 
@@ -101,7 +104,9 @@ export class dialogBrowseComponent {
         
             //Remove last element of path
             this.pathToPicked.pop()
-            
+
+            // Set the parent = root (works only for two level architecture)
+            this.objectParent.id = 0            
              
 
         // --- If the size of the path is > 2 : need to display parent of picked --- //
@@ -180,6 +185,7 @@ export class dialogBrowseComponent {
         console.log("result:" + result);
         if(result) {
             this.answer = {owner: 'All', newContainer: result}
+            console.log(this.data.getCurrentUser());
 
             //Write the new item in the server
             request({
@@ -187,10 +193,10 @@ export class dialogBrowseComponent {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 content: JSON.stringify({
-                    //owner: this.data.getMemberFromName(this.result.owner).id
-                    owner : this.data.getMemberFromName('All').id,
+                    owner: this.data.getCurrentUser().id,
                     name: result,
-                    parent: this.objectParent.id
+                    parent: this.objectParent.id,
+                    space: this.data.getCurrentUser().space
                 })
             }).then((response) => this.data.addContainerFromServer(response), (e) => {});
         } else {

@@ -18,15 +18,19 @@ export class User {
     password: string;
     confirmPassword: string;
     id: number;
+    name: string;
+    space: number;
 }
 
 @Injectable()
 export class DataService {
 
-    protected IP_Server: String = "51.38.68.118:5000"
-    //protected IP_Server: String = "192.168.1.14:5000"
+    //protected IP_Server: String = "51.38.68.118:5000"
+    protected IP_Server: String = "192.168.1.14:5000"
 
     protected members = new Array<IMember>();
+
+    protected currentUser: User;
 
     protected containers = new Array<IDataContainer>();
 
@@ -78,7 +82,7 @@ export class DataService {
     getMemberList(): Array<IMember> {
         return this.members;
     }
-    setMembers(list: IMember[]): void {
+    setMembers(list): void {
         // Empty the current this.members
         this.members.splice(0, this.members.length);
         // Push all the new list
@@ -93,6 +97,14 @@ export class DataService {
 
     getIPServer(): String {
         return this.IP_Server;
+    }
+
+    // Set the logged user
+    setCurrentUser(user: User) {
+        this.currentUser = user;
+    }
+    getCurrentUser(): User {
+        return this.currentUser;
     }
 
     // Add a container from the response of the server after POST request
