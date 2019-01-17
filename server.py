@@ -33,6 +33,10 @@ def listToString(listIds):
 # -------------------------------------------------------------------------------
 
 # ============================= ROUTES ============================
+@app.route('/', methods=['GET'])
+def index():
+    return 'welcome on stormy'
+
 # Route /space/add : create a new space
 # Need the name of the new space and the id of the user who created it {"name": name, "id": userID}
 # Return the new space
