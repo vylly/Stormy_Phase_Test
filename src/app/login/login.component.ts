@@ -62,7 +62,7 @@ export class LoginComponent {
         // Call the backend to reset the password
         alert({
             title: "APP NAME",
-            message: "Your password has been sent to your email address.",
+            message: "Sorry, this has not been implemented yet :(",
             okButtonText: "Ok"
         })
         }
@@ -89,7 +89,7 @@ export class LoginComponent {
                 this.user.id = id;
                 this.user.name = name;
                 let listSpaces = response.content.toJSON().spaces;
-                listSpaces.forEach(sp => this.user.spaces.push({id: sp, name: "Stormy "+sp})); // need to get the name here from the back end
+                listSpaces.forEach(sp => this.user.spaces.push({id: sp.id, name: sp.name})); // need to get the name here from the back end
                 this.dataService.setCurrentUser(this.user);
                 this.routerExtension.navigate(["../spaces"], {clearHistory: true});
             }
@@ -113,7 +113,7 @@ export class LoginComponent {
                 alert("Email already in use.");
             } else {
                 let listSpaces = response.content.toJSON().spaces;
-                listSpaces.forEach(sp => this.user.spaces.push({id: sp, name: "Stormy "+sp})); // need to get the name here from the back end
+                listSpaces.forEach(sp => this.user.spaces.push({id: sp.id, name: sp.name})); // need to get the name here from the back end
                 this.user.id = id;
                 this.dataService.setCurrentUser(this.user);
                 this.routerExtension.navigate(["../spaces"], {clearHistory: true});

@@ -104,9 +104,6 @@ export class dialogBrowseComponent {
         
             //Remove last element of path
             this.pathToPicked.pop()
-
-            // Set the parent = root (works only for two level architecture)
-            this.objectParent.id = 0            
              
 
         // --- If the size of the path is > 2 : need to display parent of picked --- //

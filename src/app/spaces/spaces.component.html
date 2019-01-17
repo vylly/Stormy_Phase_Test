@@ -1,12 +1,13 @@
 <ActionBar class="action-bar">
     <Label class="action-bar-title" text="My Stormy Spaces"></Label>
+    <ActionItem icon="res://logout" (tap)="logout()"></ActionItem>
 </ActionBar>
 
 <FlexboxLayout class="page">
         <StackLayout class="form">
     
             <StackLayout class="input-field">
-                <ListPicker [items]="listNameSpaces" selectedIndex=0 (selectedIndexChange)=selectedIndexChanged($event)  class="p-15"></ListPicker>
+                <ListPicker [items]="listNameSpaces" selectedIndex=0 (selectedIndexChange)=selectedIndexChanged($event)  class="picker"></ListPicker>
             </StackLayout>
             <Button text="Go to this space" (tap)="onSubmitSpace()" class="btn-primary"></Button>
           

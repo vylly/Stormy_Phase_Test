@@ -6,7 +6,7 @@ registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-fireba
 import { MLKitScanBarcodesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
 import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
 import { dialogBrowseComponent } from "../dialogBrowse/dialogBrowse.component";
-import { DataService, IDataContainer} from "../core/data.service";
+import { DataService, IDataContainer, User} from "../core/data.service";
 import { BrowseService } from "./browse.service"
 
 @Component({
@@ -20,6 +20,7 @@ export class BrowseComponent implements OnInit {
         format: string;
     }>;
     result;
+    user: User;
     @HostBinding('class.pause')
     pause = false;
 
@@ -43,6 +44,7 @@ export class BrowseComponent implements OnInit {
            //Change state of scanner
            this.pause = pause;
        });
+       this.user = this.data.getCurrentUser();
     }
 
     //Function to call every X sec

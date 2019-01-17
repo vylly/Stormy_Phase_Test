@@ -1,5 +1,6 @@
 <ActionBar class="action-bar">
-    <Label class="action-bar-title" text="Item"></Label>
+    <Label class="action-bar-title" text="{{user.currentSpace.name}}"></Label>
+    <ActionItem icon="res://logout" (tap)="logout()"></ActionItem>
 </ActionBar>
 
 <StackLayout class="page page-content">

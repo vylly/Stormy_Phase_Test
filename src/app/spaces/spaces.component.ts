@@ -22,6 +22,10 @@ export class SpacesComponent {
 
     // Constructor
     constructor(private routerExtension: RouterExtensions, private dataService: DataService) {
+        
+    };
+
+    ngOnInit(): void {
         this.user = this.dataService.getCurrentUser();
         // Initialise list of ISpace
         this.spaces = this.user.spaces;
@@ -30,8 +34,8 @@ export class SpacesComponent {
             this.listNameSpaces.push(this.spaces[i].name);
         }
         this.typed_name = "";
-        
-    };
+    }
+
 
     //Detects change of selected item (is called at boot)
     public selectedIndexChanged(args) {
@@ -72,10 +76,17 @@ export class SpacesComponent {
                 let new_space = response.content.toJSON().space
                 this.user.spaces.push(new_space);
                 this.user.currentSpace = new_space;
+                this.listNameSpaces.push(new_space.name);
                 this.dataService.setCurrentUser(this.user);
-                this.routerExtension.navigate(["../tabs/default"])
+                this.routerExtension.navigate(["../tabs/default"]);
             }, (e) => { });
         }
+    }
+
+    // Logout : reset currentUser and route to login page
+    logout() {
+        this.dataService.setCurrentUser(new User());
+        this.routerExtension.navigate(["../login"]);
     }
 
 }

@@ -4,6 +4,7 @@ import { AppTour } from 'nativescript-app-tour';
 import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
 import { ModalViewComponent } from "../dialogContainer/dialogContainer.component";
 import { request, getJSON, HttpRequestOptions } from "tns-core-modules/http";
+import { RouterExtensions } from "nativescript-angular/router";
 
 
 @Component({
@@ -22,7 +23,7 @@ export class HomeComponent implements OnInit {
     @ViewChild('feat2') feat2: ElementRef;
 
     constructor(private data: DataService, private _modalService: ModalDialogService,
-        private _vcRef: ViewContainerRef) { }
+        private _vcRef: ViewContainerRef, private router: RouterExtensions) { }
 
     ngOnInit(): void {
         this.containers = this.data.getContainers();
@@ -51,7 +52,7 @@ export class HomeComponent implements OnInit {
         }, (e) => { });
     }
 
-    // Fuction getMembers
+    // Function getMembers
     // Send a HTTP GET to the server to the route /members and set the list of members
     getMembers(): void {
         request({
@@ -115,6 +116,12 @@ export class HomeComponent implements OnInit {
 
         this.tour = new AppTour(stops);
         this.tour.show();
+    }
+
+    // Logout : reset currentUser and route to login page
+    logout() {
+        this.data.setCurrentUser(new User());
+        this.router.navigate(["../login"]);
     }
 
 }

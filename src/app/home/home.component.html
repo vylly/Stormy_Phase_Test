@@ -1,6 +1,7 @@
 <ActionBar class="action-bar" title="title">
     <ActionItem icon="res://info" (tap)="startTour()"></ActionItem>
-    <Label class="action-bar-title" text="List"></Label>
+    <ActionItem icon="res://logout" (tap)="logout()"></ActionItem>
+    <Label class="action-bar-title" text="{{user.currentSpace.name}}"></Label>
 </ActionBar>
 
 

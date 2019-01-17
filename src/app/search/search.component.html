@@ -1,12 +1,15 @@
 <ActionBar class="action-bar">
-    <Label class="action-bar-title" text="Members"></Label>
+    <Label class="action-bar-title" text="{{user.currentSpace.name}}"></Label>
+    <ActionItem icon="res://logout" (tap)="logout()"></ActionItem>
 </ActionBar>
 
 <GridLayout class="page page-content">
     <ListView [items]="members" class="list-group">
         <ng-template let-member="item">
-            <Label [nsRouterLink]="['../member', member.id]" [text]="member.name" class="list-group-item"></Label>
-            <!-- <Label [text]="member.email" class="list-group-item-text" textWrap="true"></Label>-->
+            <StackLayout [nsRouterLink]="['../member', member.id]" class="list-group-item">
+                <Label [text]="member.name" class="list-group-item-heading"></Label>
+                <Label [text]="member.email" class="list-group-item-text" textWrap="true"></Label>
+            </StackLayout>
         </ng-template>
     </ListView>
 

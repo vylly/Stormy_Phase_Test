@@ -8,7 +8,7 @@ class User(Base):
     email = Column(String)
     password = Column(String)
     name = Column(String)
-    stringSpaces = Column(String)
+    stringSpaces = Column(String) # string containing the list of allowed spaces : ",id1,id2,id3,"
 
     def __init__(self, email=None, password=None, name=None, stringSpaces=None):
         self.email = email

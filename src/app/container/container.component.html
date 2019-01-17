@@ -1,6 +1,7 @@
 <ActionBar class="action-bar">
-  <NavigationButton [nsRouterLink]="['../../home']" android.systemIcon="ic_menu_back"></NavigationButton>
+    <NavigationButton [nsRouterLink]="['../../home']" android.systemIcon="ic_menu_back"></NavigationButton>
     <Label class="action-bar-title" [text]="container.name"></Label>
+    <ActionItem icon="res://logout" (tap)="logout()"></ActionItem>
 </ActionBar>
 <GridLayout class="page page-content">
     <ListView [items]="listItems" class="list-group">

@@ -12,9 +12,9 @@ app = Flask(__name__)
 # -------- Create database and tables ----------
 from database import init_db
 init_db()
-# --------------------------------------------------
+# -----------------------------------------------------------------------------
 
-# -------------- Functions to parse the string containing spaces id -------------
+# ---------------------- Functions  -------------------------------------------
 # stringToList : take a string with ids separated by ','
 # return a list of int containing the ids
 def stringToList(stringSpaces):
@@ -30,15 +30,28 @@ def listToString(listIds):
         stringSpaces = stringSpaces + str(i) + ","
     print("stringSpaces parsed :", stringSpaces)
     return stringSpaces
+# fillNames : take the list of spaces id and fill a dictionnary with the names
+def fillNames(listIds):
+    from tables import Space
+    output = []
+    spaces = Space.query.filter(Space.id.in_(listIds))
+    for space in spaces:
+        output.append({"id":space.id, "name": space.name})
+    return output
+    
 # -------------------------------------------------------------------------------
 
 # ============================= ROUTES ============================
+@app.route('/', methods=['GET'])
+def index():
+    return 'welcome on stormy'
+
 # Route /space/add : create a new space
 # Need the name of the new space and the id of the user who created it {"name": name, "id": userID}
-# Return the new space
+# Return the new space {"space" : {"id":id, "name":name}}
 @app.route("/space/add", methods=['POST'])
 def addSpace():
-    from database import db_session
+    #from database import db_session
     from tables import Space, User
     # Create new space and add the new space in the spaces table
     new_space = Space(request.json["name"])
@@ -51,7 +64,9 @@ def addSpace():
     return jsonify({"space": {"name" : new_space.name, "id": new_space.id}})
 
 # Route /items : get all the list of items of a space
-@app.route('/items', methods=['GET', 'POST'])
+# Need {"space" : spaceID }
+# Return {"listItems" : [{"id":ID, "name":name, "parent":parentID, "owner":userID, "space": spaceID}]}
+@app.route('/items', methods=['POST'])
 def items():
     space = request.json["space"]
     from tables import Item
@@ -63,18 +78,20 @@ def items():
 
 # Route /members : get all the list of members allowed in a space
 # Need {"space" : spaceID }
-@app.route('/members', methods=['GET', 'POST'])
+# Return {"listMembers" : [{"id":ID, "name":name, "email": email}]}
+@app.route('/members', methods=['POST'])
 def members():
     space = request.json["space"]
     from tables import User
     listMembers = User.query.filter(User.stringSpaces.contains("," + str(space) + ","))
     output = []
     for user in listMembers:
-        output.append({'id': user.id, 'name': user.name})
+        output.append({'id': user.id, 'name': user.name, 'email': user.email})
     return jsonify({'listMembers' : output})
 
 # Route /item/add : method post, add a new item to the database
 # JSON needed : { "name": "abcde", "parent": 45, "owner": 12, "space": 1}
+# Return {"newItem" : {"id", "name", "parent", "owner"}}
 @app.route('/item/add', methods=['POST'])
 def addItem():
     space = request.json["space"]
@@ -88,22 +105,31 @@ def addItem():
     # return the new item, with the id just generated
     return jsonify({'newItem': {'id': new_item.id, 'name': new_item.name, 'parent': new_item.parent, 'owner': new_item.userID}}), 201
 
-'''
 # Route /member/add : method post, add a new member to a space
 # JSON needed : { "email": email, "space": spaceID}
+# Return {"newMember" : {"id", "email", "name"}} , nemMember's id -1 if email doesn't exist, -2 if already in the space
 @app.route('/member/add', methods=['POST'])
 def addMember():
     # add the member to the list
     from tables import User
     user = User.query.filter(User.email == request.json["email"]).first()
-    # NEED TO ADD TO A LIST OF SPACE, NOT JUST REPLACE IT... 
-    user.space = request.json["space"]
-    db_session.commit()
-    return jsonify({'newMember': user.id, 'space': user.space}), 201
-'''
+    if user == None:
+        # wrong email : the user does not exist so it cannot be add to a list of members
+        return jsonify({'newMember': {'id': '-1'}})
+    else:
+        listSpacesAlreadyAllowed = stringToList(user.stringSpaces)
+        if request.json["space"] not in listSpacesAlreadyAllowed:
+            # We add the space to the list of the user found by its email
+            user.stringSpaces = user.stringSpaces + str(request.json["space"]) + ","
+            db_session.commit()
+            return jsonify({'newMember': {'id': user.id, 'email': user.email, 'name': user.name}}), 201
+        else:
+            # User already allowed in this space
+            return jsonify({'newMember': {'id': -'2'}})
 
 # Route /item/remove : method post, remove an item from the database
 # JSON needed : { "idList" : [id1, id2, id3]}
+# Return {"ok": "ok"}
 @app.route('/item/remove', methods=['POST'])
 def removeItem():
     if not request.json:
@@ -135,7 +161,7 @@ def removeMember():
 
 # Route /login : method post, try to login
 # JSON needed : { "email" : email, "password": password}
-# Return space and name and id of the user, id = -1 if user not found or password incorrect
+# Return {'spaces' : [sp1, sp2, sp3], 'id' : userID, 'name': userName}, id = -1 if user not found or password incorrect
 @app.route('/login', methods=['POST'])
 def login():
     if not request.json:
@@ -148,7 +174,8 @@ def login():
     if user != None:
         # Reply if the pwd is correct or not and send the id
         if pwd == user.password:
-            return jsonify({'spaces' : stringToList(user.stringSpaces), 'id' : user.id, 'name' : user.name})
+            listSpaces = stringToList(user.stringSpaces)
+            return jsonify({'spaces' : fillNames(listSpaces), 'id' : user.id, 'name' : user.name})
         else:
             return jsonify({'id': "-1"})
     else:
@@ -156,7 +183,7 @@ def login():
 
 # Route /signup : method post, try to login
 # JSON needed : { "email" : email, "password": password, "name": name}
-# Return id of the user, id = -1 if email already in database
+# Return {'spaces' : [sp1, sp2, sp3], 'id' : userID, 'name': userName, 'email': email}, id = -1 if mail already used
 @app.route('/signup', methods=['POST'])
 def signup():
     if not request.json:
@@ -169,7 +196,7 @@ def signup():
     if(alreadyUser != None):
         return jsonify({'id': '-1'})
     # Create new space for the new user and add the new space in the spaces table
-    new_space = Space("My Stormy")
+    new_space = Space(request.json["name"] + "'s Personnal Stormy")
     db_session.add(new_space)
     db_session.commit()
     # Add new user and return it
@@ -178,10 +205,11 @@ def signup():
     db_session.add(new_user)
     db_session.commit()
     db_session.refresh(new_user)
-    return jsonify({'id': (int)(new_user.id), 'email': new_user.email, 'name' : new_user.name, 'spaces': stringToList(new_user.stringSpaces)})
+    listSpaces = stringToList(new_user.stringSpaces)
+    return jsonify({'id': (int)(new_user.id), 'email': new_user.email, 'name' : new_user.name, 'spaces': fillNames(listSpaces)})
 # ============================= ROUTES ============================
 
 
-# --------------- run server ---------------
+# --------------- run server --------------------------------------
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0") # IP address 0.0.0.0 makes the server externally visible
