@@ -76,9 +76,6 @@ export class BrowseComponent implements OnInit {
                 //The result is the result from the dialog popup
                 this.result = dialogResult;
 
-                //Create item
-                let newContainer: IDataContainer = {id: 999, name: this.result.newContainer, listItems: new Array<IDataContainer>(), owner: {id:999, name:this.result.owner}}
-                
                 //Push the item in the db
                 //this.listItems.push(newContainer);
             })

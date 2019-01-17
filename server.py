@@ -196,7 +196,7 @@ def signup():
     if(alreadyUser != None):
         return jsonify({'id': '-1'})
     # Create new space for the new user and add the new space in the spaces table
-    new_space = Space(request.json["name"] + "'s Personnal Stormy")
+    new_space = Space(request.json["name"] + "'s Personal Stormy")
     db_session.add(new_space)
     db_session.commit()
     # Add new user and return it
