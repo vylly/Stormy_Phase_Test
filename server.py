@@ -9,8 +9,8 @@ import json
 
 app = Flask(__name__)
 
-if __name__ == "__main__":
-    app.run(ssl_context=(' /etc/letsencrypt/live/118.ip-51-38-68.eu/fullchain.pem', '/etc/letsencrypt/live/118.ip-51-38-68.eu/privkey.pem'))
+
+    
 
 # -------- Create database and tables ----------
 from database import init_db
@@ -215,4 +215,5 @@ def signup():
 
 # --------------- run server --------------------------------------
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0") # IP address 0.0.0.0 makes the server externally visible
+    app.run(debug=True, host="0.0.0.0", ssl_context=('/etc/letsencrypt/live/118.ip-51-38-68.eu/fullchain.pem', '/etc/letsencrypt/live/118.ip-51-38-68.eu/privkey.pem'))
+    # IP address 0.0.0.0 makes the server externally visible
