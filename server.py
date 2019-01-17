@@ -9,6 +9,9 @@ import json
 
 app = Flask(__name__)
 
+if __name__ == "__main__":
+    app.run(ssl_context=(' /etc/letsencrypt/live/118.ip-51-38-68.eu/fullchain.pem', '/etc/letsencrypt/live/118.ip-51-38-68.eu/privkey.pem'))
+
 # -------- Create database and tables ----------
 from database import init_db
 init_db()
