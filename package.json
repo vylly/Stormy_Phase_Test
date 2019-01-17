@@ -27,11 +27,13 @@
     "nativescript-angular": "~6.2.0",
     "nativescript-app-tour": "^0.10.0",
     "nativescript-floatingactionbutton": "^5.0.0",
+    "nativescript-https": "^1.0.3",
     "nativescript-plugin-firebase": "^7.4.1",
     "nativescript-theme-core": "~1.0.4",
     "reflect-metadata": "~0.1.10",
     "rxjs": "~6.2.0",
     "tns-core-modules": "~5.0.0",
+    "tns-platform-declarations": "^5.1.2",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
