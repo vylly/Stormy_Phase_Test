@@ -1,5 +1,6 @@
 <ActionBar class="action-bar" title="title">
-    <ActionItem icon="res://info" (tap)="startTour()"></ActionItem>
+    <!--<ActionItem icon="res://info" (tap)="startTour()"></ActionItem>-->
+    <ActionItem icon="res://trash" (tap)="toggleDelete()"></ActionItem>
     <ActionItem icon="res://logout" (tap)="logout()"></ActionItem>
     <Label class="action-bar-title" text="{{user.currentSpace.name}}"></Label>
 </ActionBar>
@@ -8,10 +9,15 @@
 <GridLayout class="page page-content">
     <ListView [items]="containers" row="1" class="list-group" #feat1>
         <ng-template let-container="item">
-            <StackLayout class="list-group-item" [nsRouterLink]="['../container', container.id]">
-                <Label [text]="container.name" class="list-group-item-heading"></Label>
-                <Label [text]="container.owner.name" class="list-group-item-text" textWrap="true"></Label>
-            </StackLayout>
+            <GridLayout columns="*, 50">
+                <StackLayout col="0" class="list-group-item" [nsRouterLink]="['../container', container.id]">
+                    <Label [text]="container.name" class="list-group-item-heading"></Label>
+                    <Label [text]="container.owner.name" class="list-group-item-text" textWrap="true"></Label>
+                </StackLayout>
+                <StackLayout *ngIf="deleteMode" col="1" verticalAlignment="middle" (tap)=onDelete(container)>
+                    <Image src="res://delete"></Image>
+                </StackLayout>
+            </GridLayout>
         </ng-template>
     </ListView>
 

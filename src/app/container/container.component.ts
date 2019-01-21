@@ -4,6 +4,7 @@ import { RouterExtensions } from "nativescript-angular/router";
 import { DataService, IDataContainer, User } from "../core/data.service";
 import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
 import { ModalViewComponent } from "../dialogContainer/dialogContainer.component";
+import * as dialogs from "tns-core-modules/ui/dialogs";
 import { request, getFile, getImage, getJSON, getString, HttpRequestOptions } from "tns-core-modules/http";
 
 /* ***********************************************************
@@ -23,6 +24,7 @@ export class ContainerComponent implements OnInit {
     listItems: Array<IDataContainer>;
     result;
     user: User;
+    deleteMode: boolean;
 
     constructor(
         private data: DataService,
@@ -37,6 +39,7 @@ export class ContainerComponent implements OnInit {
         this.container = this.data.getContainer(id);
         this.listItems = this.container.listItems;
         this.user = this.data.getCurrentUser();
+        this.deleteMode = false;
     }
 
     fabTap(): void {
@@ -69,6 +72,38 @@ export class ContainerComponent implements OnInit {
     logout() {
         this.data.setCurrentUser(new User());
         this.router.navigate(["../login"]);
+    }
+
+    // Delete an item
+    onDelete(container) {
+        dialogs.confirm("Are you sure you want to delete " + container.name + " ?").then(result => {
+            if(result) {
+                let listIds = [container.id];
+                container.listItems.forEach(item => listIds.push(item.id));
+                request({
+                    url: "http://" + this.data.getIPServer() + "/item/remove",
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    content: JSON.stringify({
+                        idList: listIds
+                    })
+                }).then((response) => {
+                    // remove the item from the list
+                    let newList = new Array<IDataContainer>();
+                    this.listItems.forEach(item => {
+                        if(item.id != container.id) {
+                            newList.push(item);
+                        }
+                    });
+                    this.listItems = newList;
+                }, (e) => { });
+            }
+        })
+    }
+
+    // Activate the delete mode
+    toggleDelete() {
+        this.deleteMode = !this.deleteMode;
     }
 
 }

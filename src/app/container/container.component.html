@@ -1,20 +1,27 @@
 <ActionBar class="action-bar">
     <NavigationButton [nsRouterLink]="['../../home']" android.systemIcon="ic_menu_back"></NavigationButton>
     <Label class="action-bar-title" [text]="container.name"></Label>
+    <ActionItem icon="res://trash" (tap)="toggleDelete()"></ActionItem>
     <ActionItem icon="res://logout" (tap)="logout()"></ActionItem>
 </ActionBar>
 <GridLayout class="page page-content">
     <ListView [items]="listItems" class="list-group">
         <ng-template let-container="item">
-            <StackLayout class="list-group-item" [nsRouterLink]="['../', container.id]">
-                <Label [text]="container.name" class="list-group-item-heading"></Label>
-                <Label [text]="container.owner.name" class="list-group-item-text" textWrap="true"></Label>
-            </StackLayout>
-          </ng-template>
+            <GridLayout columns="*, 50">
+                <StackLayout class="list-group-item" [nsRouterLink]="['../', container.id]">
+                    <Label [text]="container.name" class="list-group-item-heading"></Label>
+                    <Label [text]="container.owner.name" class="list-group-item-text" textWrap="true"></Label>
+                </StackLayout>
+                <!-- delete button -->
+                <StackLayout *ngIf="deleteMode" col="1" verticalAlignment="middle" (tap)=onDelete(container)>
+                    <Image src="res://delete"></Image>
+                </StackLayout>
+            </GridLayout>
+        </ng-template>
     </ListView>
 
     <StackLayout>
         <FAB (tap)="fabTap()" icon="res://add" class="fab-button"></FAB>
     </StackLayout>
-    
+
 </GridLayout>

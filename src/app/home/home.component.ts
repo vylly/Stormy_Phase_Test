@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef } from "@ang
 import { DataService, IDataContainer, User } from "../core/data.service";
 import { AppTour } from 'nativescript-app-tour';
 import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/modal-dialog";
+import * as dialogs from "tns-core-modules/ui/dialogs";
 import { ModalViewComponent } from "../dialogContainer/dialogContainer.component";
 import { request, getJSON, HttpRequestOptions } from "tns-core-modules/http";
 import { RouterExtensions } from "nativescript-angular/router";
@@ -18,6 +19,7 @@ export class HomeComponent implements OnInit {
     tour;
     result;
     user: User;
+    deleteMode: boolean;
 
     //List of features (for app tour)
     @ViewChild('feat1') feat1: ElementRef;
@@ -30,6 +32,7 @@ export class HomeComponent implements OnInit {
         this.containers = this.data.getContainers();
         this.user = this.data.getCurrentUser();
         this.getMembers();
+        this.deleteMode = false;
     }
 
 
@@ -94,11 +97,11 @@ export class HomeComponent implements OnInit {
         this._modalService.showModal(ModalViewComponent, options)
             .then((dialogResult: Object) => {
                 this.result = dialogResult;
-                
+
                 if (this.result) {
                     // Write the new item in the server
 
-                   request({
+                    request({
                         url: "http://" + this.data.getIPServer() + "/item/add",
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -148,6 +151,31 @@ export class HomeComponent implements OnInit {
     logout() {
         this.data.setCurrentUser(new User());
         this.router.navigate(["../login"]);
+    }
+
+    // Delete an item
+    onDelete(container) {
+        dialogs.confirm("Are you sure you want to delete " + container.name + " ?").then(result => {
+            if(result) {
+                let listIds = [container.id];
+                container.listItems.forEach(item => listIds.push(item.id));
+                request({
+                    url: "http://" + this.data.getIPServer() + "/item/remove",
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    content: JSON.stringify({
+                        idList: listIds
+                    })
+                }).then((response) => {
+                    this.getList();
+                }, (e) => { });
+            }
+        })
+    }
+
+    // Activate the delete mode
+    toggleDelete() {
+        this.deleteMode = !this.deleteMode;
     }
 
 }
