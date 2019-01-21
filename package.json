@@ -24,6 +24,7 @@
     "@angular/platform-browser": "~6.1.0",
     "@angular/platform-browser-dynamic": "~6.1.0",
     "@angular/router": "~6.1.0",
+    "email-validator": "^2.0.4",
     "nativescript-angular": "~6.2.0",
     "nativescript-app-tour": "^0.10.0",
     "nativescript-bcryptjs": "^1.0.1",
