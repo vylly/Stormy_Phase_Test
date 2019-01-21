@@ -217,5 +217,5 @@ def signup():
 
 # --------------- run server --------------------------------------
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", ssl_context=('/etc/letsencrypt/live/118.ip-51-38-68.eu/fullchain.pem', '/etc/letsencrypt/live/118.ip-51-38-68.eu/privkey.pem'))
+    app.run(debug=True, host="0.0.0.0" )#, ssl_context=('/etc/letsencrypt/live/118.ip-51-38-68.eu/fullchain.pem', '/etc/letsencrypt/live/118.ip-51-38-68.eu/privkey.pem'))
     # IP address 0.0.0.0 makes the server externally visible
