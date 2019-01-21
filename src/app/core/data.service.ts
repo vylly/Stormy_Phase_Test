@@ -33,7 +33,7 @@ export class User {
 export class DataService {
 
     protected IP_Server: String = "51.38.68.118:5000"
-    //protected IP_Server: String = "192.168.1.14:5000"
+    //protected IP_Server: String = "192.168.1.25:5000"
 
     protected members = new Array<IMember>();
 

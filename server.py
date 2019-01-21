@@ -6,9 +6,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import *
 from database import db_session
 import json
-
+from flask_bcrypt import Bcrypt
 app = Flask(__name__)
-
+bcrypt = Bcrypt(app)
 
     
 
@@ -176,7 +176,7 @@ def login():
     user = User.query.filter(User.email == email).first()
     if user != None:
         # Reply if the pwd is correct or not and send the id
-        if pwd == user.password:
+        if (bcrypt.check_password_hash(user.password,pwd)):
             listSpaces = stringToList(user.stringSpaces)
             return jsonify({'spaces' : fillNames(listSpaces), 'id' : user.id, 'name' : user.name})
         else:
@@ -204,7 +204,9 @@ def signup():
     db_session.commit()
     # Add new user and return it
     spacesList = [new_space.id]
-    new_user = User(email=request.json["email"], password=request.json["password"], name=request.json["name"], stringSpaces=listToString(spacesList))
+    # Hash + salt password before storing it
+    hashedPwd = bcrypt.generate_password_hash(request.json["password"])
+    new_user = User(email=request.json["email"], hashedPwd, name=request.json["name"], stringSpaces=listToString(spacesList))
     db_session.add(new_user)
     db_session.commit()
     db_session.refresh(new_user)

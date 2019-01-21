@@ -8,7 +8,6 @@ import { request, getJSON, HttpRequestOptions } from "tns-core-modules/http";
 import {ISpace } from "../core/data.service"; 
 //import * as Https from 'nativescript-https'
 
-
 @Component({
     moduleId: module.id,
     selector: "login-page",
@@ -155,7 +154,8 @@ export class LoginComponent {
     }
     onChangePwd(args) {
         let textField = <TextField>args.object;
-        this.user.password = textField.text;
+        this.user.password =textField.text;
+        
     }
     onChangeConfPwd(args) {
         let textField = <TextField>args.object;
