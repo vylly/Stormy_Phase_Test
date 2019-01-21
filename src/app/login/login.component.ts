@@ -6,6 +6,7 @@ import { DataService, User } from "../core/data.service";
 import { TextField } from "tns-core-modules/ui/text-field";
 import { request, getJSON, HttpRequestOptions } from "tns-core-modules/http";
 import {ISpace } from "../core/data.service"; 
+//import * as Https from 'nativescript-https'
 
 
 @Component({
@@ -79,6 +80,12 @@ export class LoginComponent {
                 email: this.user.email,
                 password: this.user.password
             })
+            // body: {
+            //     "content" : JSON.stringify({
+            //         email: this.user.email,
+            //         password: this.user.password
+            //     })
+            // }
         }).then((response) => {
             let id = response.content.toJSON().id;
             let name = response.content.toJSON().name;
@@ -107,6 +114,13 @@ export class LoginComponent {
                 password: this.user.password,
                 name: this.user.name
             })
+            // body: {
+            //     "content" : JSON.stringify({
+            //         email: this.user.email,
+            //         password: this.user.password,
+            //         name: this.user.name
+            //     })
+            // }
         }).then((response) => {
             let id = response.content.toJSON().id;
             if(id == -1) {

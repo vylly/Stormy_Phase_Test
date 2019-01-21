@@ -5,6 +5,7 @@ import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/mod
 import { ModalViewComponent } from "../dialogContainer/dialogContainer.component";
 import { request, getJSON, HttpRequestOptions } from "tns-core-modules/http";
 import { RouterExtensions } from "nativescript-angular/router";
+//import * as Https from 'nativescript-https'
 
 
 @Component({
@@ -36,13 +37,21 @@ export class HomeComponent implements OnInit {
     // Send a HTTP GET to the server to the route /items and set the list of items
     // Then build the whole tree
     getList(): void {
+
         request({
             url: "http://" + this.data.getIPServer() + "/items",
             method: "POST",
             headers: { "Content-Type": "application/json" },
+
+            // body: {
+            //     "content" : JSON.stringify({
+            //         space: this.user.currentSpace.id 
+            //     }) 
+            // }
             content: JSON.stringify({
                 space: this.user.currentSpace.id
             })
+
         }).then((response) => {
             // Update the items in the data service
             this.data.setContainers(response.content.toJSON().listItems);
@@ -62,6 +71,12 @@ export class HomeComponent implements OnInit {
             content: JSON.stringify({
                 space: this.user.currentSpace.id
             })
+            // body: {
+            //     "content" : JSON.stringify({
+            //         space: this.user.currentSpace.id
+            //     })
+            // }
+
         }).then((response) => {
             // Update the member list
             this.data.setMembers(response.content.toJSON().listMembers);
@@ -79,18 +94,29 @@ export class HomeComponent implements OnInit {
         this._modalService.showModal(ModalViewComponent, options)
             .then((dialogResult: Object) => {
                 this.result = dialogResult;
+                
                 if (this.result) {
                     // Write the new item in the server
-                    request({
+
+                   request({
                         url: "http://" + this.data.getIPServer() + "/item/add",
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
+                        // body: {
+                        //    "content":  JSON.stringify({
+                        //         owner: this.data.getMemberFromName(this.result.owner).id,
+                        //         name: this.result.newContainer,
+                        //         parent: 0,
+                        //         space: this.user.currentSpace.id    
+                        //     })
+                        // }
                         content: JSON.stringify({
                             owner: this.data.getMemberFromName(this.result.owner).id,
                             name: this.result.newContainer,
                             parent: 0,
                             space: this.user.currentSpace.id
                         })
+
                     }).then((response) => this.data.addContainerFromServer(response), (e) => { });
                 }
             })
@@ -102,7 +128,7 @@ export class HomeComponent implements OnInit {
             {
                 view: this.feat2.nativeElement,
                 title: 'Bouton d\'ajout',
-                description: "Ajoutez des conteneurs avec ce bouton",
+                description: "Add containers with this button",
                 dismissable: true
             },
             {
