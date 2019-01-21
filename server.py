@@ -206,7 +206,7 @@ def signup():
     spacesList = [new_space.id]
     # Hash + salt password before storing it
     hashedPwd = bcrypt.generate_password_hash(request.json["password"])
-    new_user = User(email=request.json["email"], hashedPwd, name=request.json["name"], stringSpaces=listToString(spacesList))
+    new_user = User(email=request.json["email"], password=hashedPwd, name=request.json["name"], stringSpaces=listToString(spacesList))
     db_session.add(new_user)
     db_session.commit()
     db_session.refresh(new_user)
