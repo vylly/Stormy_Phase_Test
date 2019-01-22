@@ -53,15 +53,22 @@ export class HomeComponent implements OnInit {
             //     }) 
             // }
             content: JSON.stringify({
-                space: this.user.currentSpace.id
+                space: this.user.currentSpace.id,
+                token: this.user.token
             })
 
         }).then((response) => {
-            // Update the items in the data service
-            this.data.setContainers(response.content.toJSON().listItems);
-            this.data.fillContainers(response.content.toJSON().listItems);
-            // Update the list in this component
-            this.containers = this.data.getContainers();
+            if (response.content.toJSON().status == "success") {
+                // Update the items in the data service
+                this.data.setContainers(response.content.toJSON().listItems);
+                this.data.fillContainers(response.content.toJSON().listItems);
+                // Update the list in this component
+                this.containers = this.data.getContainers();
+            } else {
+                // Invalid token
+                this.logout();
+                alert("Your session has expired. Please log in again.");
+            }
         }, (e) => { });
     }
 
@@ -73,7 +80,8 @@ export class HomeComponent implements OnInit {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             content: JSON.stringify({
-                space: this.user.currentSpace.id
+                space: this.user.currentSpace.id,
+                token: this.user.token
             })
             // body: {
             //     "content" : JSON.stringify({
@@ -82,10 +90,16 @@ export class HomeComponent implements OnInit {
             // }
 
         }).then((response) => {
-            // Update the member list
-            this.data.setMembers(response.content.toJSON().listMembers);
-            // We request the items only when the members are set (because we need to find the owner)
-            this.getList();
+            if (response.content.toJSON().status == "success") {
+                // Update the member list
+                this.data.setMembers(response.content.toJSON().listMembers);
+                // We request the items only when the members are set (because we need to find the owner)
+                this.getList();
+            } else {
+                // Invalid token
+                this.logout();
+                alert("Your session has expired. Please log in again.");
+            }
         }, (e) => { });
     }
 
@@ -118,10 +132,18 @@ export class HomeComponent implements OnInit {
                             owner: this.data.getMemberFromName(this.result.owner).id,
                             name: this.result.newContainer,
                             parent: 0,
-                            space: this.user.currentSpace.id
+                            space: this.user.currentSpace.id,
+                            token: this.user.token
                         })
 
-                    }).then((response) => this.data.addContainerFromServer(response), (e) => { });
+                    }).then((response) => {
+                        if (response.content.toJSON().status == "fail") {
+                            this.logout();
+                            alert("Your session has expired. Please log in again.");
+                        } else {
+                            this.data.addContainerFromServer(response);
+                        }
+                    }, (e) => { });
                 }
             })
     }
@@ -157,7 +179,7 @@ export class HomeComponent implements OnInit {
     // Delete an item
     onDelete(container) {
         dialogs.confirm("Are you sure you want to delete " + container.name + " ?").then(result => {
-            if(result) {
+            if (result) {
                 let listIds = [container.id];
                 container.listItems.forEach(item => listIds.push(item.id));
                 request({
@@ -165,10 +187,16 @@ export class HomeComponent implements OnInit {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     content: JSON.stringify({
-                        idList: listIds
+                        idList: listIds,
+                        token: this.user.token
                     })
                 }).then((response) => {
-                    this.getList();
+                    if (response.content.toJSON().status == "fail") {
+                        this.logout();
+                        alert("Your session has expired. Please log in again.");
+                    } else {
+                        this.getList();
+                    }
                 }, (e) => { });
             }
         })
@@ -182,16 +210,16 @@ export class HomeComponent implements OnInit {
     // Search an item an display its container in a popup (the first one if many items have the same name)
     onSearchItem(args) {
         let field = <TextField>args.object;
-        for(let i = 0; i<this.containers.length; i++) {
+        for (let i = 0; i < this.containers.length; i++) {
             // Test if it is a container with parent = 0
-            if(this.containers[i].name == field.text) {
+            if (this.containers[i].name == field.text) {
                 alert("This item is a container, in the root of this space.");
                 field.text = "";
                 return;
             }
             // Test if it is in the children of a container
-            for(let j = 0; j<this.containers[i].listItems.length; j++) {
-                if(this.containers[i].listItems[j].name == field.text) {
+            for (let j = 0; j < this.containers[i].listItems.length; j++) {
+                if (this.containers[i].listItems[j].name == field.text) {
                     alert("This item is in " + this.containers[i].name);
                     field.text = "";
                     return;

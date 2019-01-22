@@ -1,9 +1,10 @@
-import { Component} from "@angular/core";
+import { Component } from "@angular/core";
 import { ModalDialogParams } from "nativescript-angular/modal-dialog";
 import { ListPicker } from "tns-core-modules/ui/list-picker";
-import { DataService,IDataContainer } from "../core/data.service";
+import { DataService, IDataContainer, User} from "../core/data.service";
 import { Observable } from "rxjs";
 import { request, getJSON, HttpRequestOptions } from "tns-core-modules/http";
+import { RouterExtensions } from "nativescript-angular/router";
 
 @Component({
     selector: "modal-content",
@@ -27,7 +28,7 @@ export class dialogBrowseComponent {
 
     public prompt1: string = "Select location of the new object";
     public prompt2: string = "Type the name of the new object/container";
-    
+
     //Current selected container
     public picked: IDataContainer;
     public answer;
@@ -39,20 +40,21 @@ export class dialogBrowseComponent {
 
     constructor(
         private _params: ModalDialogParams,
-        private data : DataService
-        ) {
+        private data: DataService,
+        private router: RouterExtensions
+    ) {
 
         // just in case we create an object directly
-        this.objectParent = {id:0, name:"root", listItems: new Array<IDataContainer>(), owner:this.data.getMemberList()[0]};
+        this.objectParent = { id: 0, name: "root", listItems: new Array<IDataContainer>(), owner: this.data.getMemberList()[0] };
 
         //Receive list of containers in its purest form
-        this.objects =  _params.context.objects
+        this.objects = _params.context.objects
 
         //Extract names from the list 
-        for (let i = 0; i<this.objects.length; i++) {
+        for (let i = 0; i < this.objects.length; i++) {
             this.objectsNames.push(this.objects[i].name);
         }
-        
+
         //Watch for changes in the list of names
         this.listContainers = Observable.create(subscriber => {
             this.subscr = subscriber;
@@ -60,14 +62,14 @@ export class dialogBrowseComponent {
             return function () {
                 console.log("Unsubscribe calleed!!!");
             };
-            
+
         });
     }
-    
+
     //When user taps on selected item in ListPicker, 
     public onTap(args) {
         console.log("onTap() called");
-        
+
     }
 
     public selectContainer(args) {
@@ -78,15 +80,15 @@ export class dialogBrowseComponent {
     //Called when click on left arrow (access to parent container)
     public up() {
         //console.log("We wish to display parent of : " + this.picked.name + " with id : " + this.picked.id);
-        
+
         // --- If the size of the path is 1 : not possible to go up --- //
-        if(this.pathToPicked.length == 1) {
+        if (this.pathToPicked.length == 1) {
             //Do nothing
             //console.log("Cannot go up (this.pathToPicked.length == 1)")
-        
-        // --- If the size of the path is 2 : need to display the root --- //
-        } else if(this.pathToPicked.length == 2) {
-        
+
+            // --- If the size of the path is 2 : need to display the root --- //
+        } else if (this.pathToPicked.length == 2) {
+
             //console.log("this.pathToPicked.length == 2")
             this.picked = this.objectParent;
 
@@ -97,39 +99,39 @@ export class dialogBrowseComponent {
 
             //Get the root (whole data)
             this.objects = this.data.getContainers();
-            for (let i = 0; i<this.objects.length; i++) {
+            for (let i = 0; i < this.objects.length; i++) {
                 this.objectsNames.push(this.objects[i].name);
             }
             this.subscr.next([...this.objectsNames]);
-        
+
             //Remove last element of path
             this.pathToPicked.pop()
-             
 
-        // --- If the size of the path is > 2 : need to display parent of picked --- //
+
+            // --- If the size of the path is > 2 : need to display parent of picked --- //
         } else {
             console.log("this.pathToPicked.length > 2 SHOULD NOT APPEAR ATM")
             this.picked = this.objectParent;
             this.data.getContainer(this.picked.id)
-            
+
             //Clear Array
             this.objectsNames = [];
             this.objects = [];
             this.subscr.next([...this.objectsNames]);
 
             //Populate array with first level items
-            for (let i = 0; i<this.data.getListItems(this.picked.id).length; i++) {
+            for (let i = 0; i < this.data.getListItems(this.picked.id).length; i++) {
                 this.objectsNames.push(this.data.getListItems(this.picked.id)[i].name);
                 this.objects.push(this.data.getListItems(this.picked.id)[i]);
             }
             this.subscr.next([...this.objectsNames]);
-        }      
+        }
         //console.log("pathToPicked : " + this.pathToPicked);
 
     }
 
     //Called when click on right arrow (access to child container)
-    public down(args) { 
+    public down(args) {
         console.log("We wish to display childs of : " + this.picked.name + " with id : " + this.picked.id);
 
         //Add current ID to path
@@ -140,21 +142,20 @@ export class dialogBrowseComponent {
 
         //If the selected item has childs, display it
         //console.log(this.data.getListItems(this.picked.id).length)
-        if(this.picked.listItems.length != 0)
-        {
+        if (this.picked.listItems.length != 0) {
             console.log(this.picked.listItems)
             //Clear array
             this.objectsNames = [];
             this.objects = [];
             this.subscr.next([...this.objectsNames]);
             //We add all childs of the selected container in the listPicker
-            for (let i = 0; i<this.data.getListItems(this.picked.id).length; i++) {
+            for (let i = 0; i < this.data.getListItems(this.picked.id).length; i++) {
                 this.objectsNames.push(this.data.getListItems(this.picked.id)[i].name);
                 this.objects.push(this.data.getListItems(this.picked.id)[i]);
             }
-            console.log(this.objectsNames); 
+            console.log(this.objectsNames);
             //Update selected container
-            
+
             //11/01/2018 Commenté cette ligne
             //let picker = <ListPicker>args.object;
 
@@ -178,10 +179,10 @@ export class dialogBrowseComponent {
     }
 
     //To close the dialog, call the closeCallback function of the dialog params.
-    public close(result : string) {
+    public close(result: string) {
         console.log("result:" + result);
-        if(result) {
-            this.answer = {owner: 'All', newContainer: result}
+        if (result) {
+            this.answer = { owner: 'All', newContainer: result }
             console.log(this.data.getCurrentUser());
 
             //Write the new item in the server
@@ -193,12 +194,26 @@ export class dialogBrowseComponent {
                     owner: this.data.getCurrentUser().id,
                     name: result,
                     parent: this.objectParent.id,
-                    space: this.data.getCurrentUser().currentSpace.id
+                    space: this.data.getCurrentUser().currentSpace.id,
+                    token: this.data.getCurrentUser().token
                 })
-            }).then((response) => this.data.addContainerFromServer(response), (e) => {});
+            }).then((response) => {
+                if (response.content.toJSON().status == "fail") {
+                    this.logout();
+                    alert("Your session has expired. Please log in again.");
+                } else {
+                    this.data.addContainerFromServer(response);
+                }
+            }, (e) => { });
         } else {
             this.answer = null;
         }
         this._params.closeCallback(this.answer);
-  }
+    }
+
+    // Logout : reset currentUser and route to login page
+    logout() {
+        this.data.setCurrentUser(new User());
+        this.router.navigate(["../login"]);
+    }
 }

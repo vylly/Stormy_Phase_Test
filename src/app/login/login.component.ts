@@ -36,7 +36,6 @@ export class LoginComponent {
 
     // Sign up or Log in
     submit() {
-        console.log(this.user);
         // Check if an email and a pwd have been entered
         if (!this.user.email || !this.user.password) {
             alert("Please provide both an email address and password.");
@@ -95,6 +94,7 @@ export class LoginComponent {
             } else {
                 this.user.id = id;
                 this.user.name = name;
+                this.user.token = response.content.toJSON().token;
                 let listSpaces = response.content.toJSON().spaces;
                 listSpaces.forEach(sp => this.user.spaces.push({ id: sp.id, name: sp.name })); // need to get the name here from the back end
                 this.dataService.setCurrentUser(this.user);
@@ -132,6 +132,7 @@ export class LoginComponent {
                         let listSpaces = response.content.toJSON().spaces;
                         listSpaces.forEach(sp => this.user.spaces.push({ id: sp.id, name: sp.name })); // need to get the name here from the back end
                         this.user.id = id;
+                        this.user.token = response.content.toJSON().token;
                         this.dataService.setCurrentUser(this.user);
                         this.routerExtension.navigate(["../spaces"], { clearHistory: true });
                     }

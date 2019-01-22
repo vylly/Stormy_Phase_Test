@@ -22,7 +22,7 @@ export class SpacesComponent {
 
     // Constructor
     constructor(private routerExtension: RouterExtensions, private dataService: DataService) {
-        
+
     };
 
     ngOnInit(): void {
@@ -30,10 +30,11 @@ export class SpacesComponent {
         // Initialise list of ISpace
         this.spaces = this.user.spaces;
         // Initialise list of string for the list picker
-        for (let i = 0; i<this.spaces.length; i++) {
+        for (let i = 0; i < this.spaces.length; i++) {
             this.listNameSpaces.push(this.spaces[i].name);
         }
         this.typed_name = "";
+        console.log("user logged :", this.user);
     }
 
 
@@ -54,12 +55,12 @@ export class SpacesComponent {
     public onTextChanged(args) {
         let textField = <TextField>args.object;
         this.typed_name = textField.text;
-        
+
     }
 
     // Create a new space
     public onCreate() {
-        if(this.typed_name == "") {
+        if (this.typed_name == "") {
             alert("Please enter a name for your space");
         } else {
             // Write the new space in the server, with its name and the id of the creator (currentUser)
@@ -69,16 +70,23 @@ export class SpacesComponent {
                 headers: { "Content-Type": "application/json" },
                 content: JSON.stringify({
                     name: this.typed_name,
-                    id: this.user.id
+                    id: this.user.id,
+                    token: this.user.token
                 })
             }).then((response) => {
-                // Update the items in the currentUser
-                let new_space = response.content.toJSON().space
-                this.user.spaces.push(new_space);
-                this.user.currentSpace = new_space;
-                this.listNameSpaces.push(new_space.name);
-                this.dataService.setCurrentUser(this.user);
-                this.routerExtension.navigate(["../tabs/default"]);
+                // Get the new member added to the server with the id just generated
+                const result = response.content.toJSON();
+                if (result.newMember.id == -1) {
+                    alert("This email is not linked to a Stormy account.");
+                } else {
+                    // Update the items in the currentUser
+                    let new_space = response.content.toJSON().space
+                    this.user.spaces.push(new_space);
+                    this.user.currentSpace = new_space;
+                    this.listNameSpaces.push(new_space.name);
+                    this.dataService.setCurrentUser(this.user);
+                    this.routerExtension.navigate(["../tabs/default"]);
+                }
             }, (e) => { });
         }
     }

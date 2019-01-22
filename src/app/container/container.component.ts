@@ -61,9 +61,17 @@ export class ContainerComponent implements OnInit {
                             owner: this.data.getMemberFromName(this.result.owner).id,
                             name: this.result.newContainer,
                             parent: this.container.id,
-                            space: this.data.getCurrentUser().currentSpace.id
+                            space: this.data.getCurrentUser().currentSpace.id,
+                            token: this.user.token
                         })
-                    }).then((response) => this.data.addContainerFromServer(response), (e) => {});
+                    }).then((response) => {
+                        if (response.content.toJSON().status == "fail") {
+                            this.logout();
+                            alert("Your session has expired. Please log in again.");
+                        } else {
+                            this.data.addContainerFromServer(response)
+                        }
+                    }, (e) => { });
                 }
             })
     }
@@ -77,7 +85,7 @@ export class ContainerComponent implements OnInit {
     // Delete an item
     onDelete(container) {
         dialogs.confirm("Are you sure you want to delete " + container.name + " ?").then(result => {
-            if(result) {
+            if (result) {
                 let listIds = [container.id];
                 container.listItems.forEach(item => listIds.push(item.id));
                 request({
@@ -85,17 +93,23 @@ export class ContainerComponent implements OnInit {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     content: JSON.stringify({
-                        idList: listIds
+                        idList: listIds,
+                        token: this.user.token
                     })
                 }).then((response) => {
-                    // remove the item from the list
-                    let newList = new Array<IDataContainer>();
-                    this.listItems.forEach(item => {
-                        if(item.id != container.id) {
-                            newList.push(item);
-                        }
-                    });
-                    this.listItems = newList;
+                    if (response.content.toJSON().status == "fail") {
+                        this.logout();
+                        alert("Your session has expired. Please log in again.");
+                    } else {
+                        // remove the item from the list
+                        let newList = new Array<IDataContainer>();
+                        this.listItems.forEach(item => {
+                            if (item.id != container.id) {
+                                newList.push(item);
+                            }
+                        });
+                        this.listItems = newList;
+                    }
                 }, (e) => { });
             }
         })

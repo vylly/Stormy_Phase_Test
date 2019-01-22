@@ -8,6 +8,7 @@ import { ModalDialogService, ModalDialogOptions } from "nativescript-angular/mod
 import { dialogBrowseComponent } from "../dialogBrowse/dialogBrowse.component";
 import { DataService, IDataContainer, User} from "../core/data.service";
 import { BrowseService } from "./browse.service"
+import { RouterExtensions } from "nativescript-angular/router";
 
 @Component({
     selector: "Browse",
@@ -28,7 +29,8 @@ export class BrowseComponent implements OnInit {
         private _modalService: ModalDialogService,
         private data: DataService,
         private _vcRef: ViewContainerRef,
-        private browseService: BrowseService
+        private browseService: BrowseService,
+        private router: RouterExtensions
     ) {
         /* ***********************************************************
         * Use the constructor to inject app services that you need in this component.

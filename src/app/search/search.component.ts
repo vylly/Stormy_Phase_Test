@@ -37,9 +37,9 @@ export class SearchComponent implements OnInit {
             cancelButtonText: "Cancel",
             cancelable: true
         };
-      // open dialog
-      prompt(options).then(r => {
-            if(r.result) {
+        // open dialog
+        prompt(options).then(r => {
+            if (r.result) {
                 // Write the new member in the server
                 request({
                     url: "http://" + this.memberService.getIPServer() + "/member/add",
@@ -47,20 +47,26 @@ export class SearchComponent implements OnInit {
                     headers: { "Content-Type": "application/json" },
                     content: JSON.stringify({
                         email: r.text,
-                        space: this.user.currentSpace.id
+                        space: this.user.currentSpace.id,
+                        token: this.user.token
                     })
                 }).then((response) => {
-                    // Get the new member added to the server with the id just generated
-                    const result = response.content.toJSON();
-                    if(result.newMember.id == -1) {
-                        alert("This email is not linked to a Stormy account.");
+                    if (response.content.toJSON().status == "fail") {
+                        this.logout();
+                        alert("Your session has expired. Please log in again.");
                     } else {
-                        this.members.push(result.newMember);
+                        // Get the new member added to the server with the id just generated
+                        const result = response.content.toJSON();
+                        if (result.newMember.id == -1) {
+                            alert("This email is not linked to a Stormy account.");
+                        } else {
+                            this.members.push(result.newMember);
+                        }
                     }
                 }, (e) => {
                 });
-          }
-      });
+            }
+        });
     }
 
     // Logout : reset currentUser and route to login page
