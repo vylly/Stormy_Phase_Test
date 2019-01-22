@@ -146,21 +146,25 @@ def removeItem():
     db_session.commit()    
     return jsonify({'ok': 'ok'}), 201
 
-'''
+
 # Route /member/remove : method post, remove a member from the database
-# JSON needed : { "id" : id}
+# JSON needed : { "id" : id, "space": space}
 @app.route('/member/remove', methods=['POST'])
 def removeMember():
-    if not request.json:
-        abort(400)
     idToRemove = request.json["id"]
-    # delete the member from the space
-    listMembers = [m for m in listMembers if not (m["id"] == idToRemove)]
-    # write the new list in the database
-    with open('data.json', 'w') as outfile:
-        json.dump({"items": listItems, "members": listMembers}, outfile)
+    space = request.json["space"]
+    # Find the user
+    from tables import User
+    user = User.query.filter(User.id == idToRemove)
+    # Remove the space from his list of spaces
+    listSpaces = stringToList(user.stringSpaces)
+    for sp in listSpaces:
+        if sp != space:
+            newList.append(sp)
+    user.stringSpaces = listToString(newList)
+    db_session.commit()
     return jsonify({'ok': 'ok'}), 201
-'''
+
 
 # Route /login : method post, try to login
 # JSON needed : { "email" : email, "password": password}
@@ -199,7 +203,7 @@ def signup():
     if(alreadyUser != None):
         return jsonify({'id': '-1'})
     # Create new space for the new user and add the new space in the spaces table
-    new_space = Space(request.json["name"] + "'s Personal Stormy")
+    new_space = Space(request.json["name"] + "'s Stormy")
     db_session.add(new_space)
     db_session.commit()
     # Add new user and return it

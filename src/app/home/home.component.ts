@@ -6,6 +6,7 @@ import * as dialogs from "tns-core-modules/ui/dialogs";
 import { ModalViewComponent } from "../dialogContainer/dialogContainer.component";
 import { request, getJSON, HttpRequestOptions } from "tns-core-modules/http";
 import { RouterExtensions } from "nativescript-angular/router";
+import { TextField } from "tns-core-modules/ui/text-field";
 //import * as Https from 'nativescript-https'
 
 
@@ -176,6 +177,31 @@ export class HomeComponent implements OnInit {
     // Activate the delete mode
     toggleDelete() {
         this.deleteMode = !this.deleteMode;
+    }
+
+    // Search an item an display its container in a popup (the first one if many items have the same name)
+    onSearchItem(args) {
+        let field = <TextField>args.object;
+        for(let i = 0; i<this.containers.length; i++) {
+            // Test if it is a container with parent = 0
+            if(this.containers[i].name == field.text) {
+                alert("This item is a container, in the root of this space.");
+                field.text = "";
+                return;
+            }
+            // Test if it is in the children of a container
+            for(let j = 0; j<this.containers[i].listItems.length; j++) {
+                if(this.containers[i].listItems[j].name == field.text) {
+                    alert("This item is in " + this.containers[i].name);
+                    field.text = "";
+                    return;
+                }
+            }
+        }
+        // The item was not found
+        alert("Item not found");
+        field.text = "";
+        return;
     }
 
 }

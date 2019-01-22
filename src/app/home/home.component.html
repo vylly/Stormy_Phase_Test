@@ -6,8 +6,9 @@
 </ActionBar>
 
 
-<GridLayout class="page page-content">
-    <ListView [items]="containers" row="1" class="list-group" #feat1>
+<GridLayout class="page page-content" rows="50, *">
+    <TextField row="0" hint="Search an item" (returnPress)="onSearchItem($event)"></TextField>
+    <ListView row="1" [items]="containers" row="1" class="list-group" #feat1>
         <ng-template let-container="item">
             <GridLayout columns="*, 50">
                 <StackLayout col="0" class="list-group-item" [nsRouterLink]="['../container', container.id]">
@@ -21,7 +22,7 @@
         </ng-template>
     </ListView>
 
-    <StackLayout row="1">
+    <StackLayout *ngIf="!deleteMode" row="1">
         <FAB (tap)="fabTap()" icon="res://add" class="fab-button" #feat2></FAB>
     </StackLayout>
     

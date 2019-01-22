@@ -20,7 +20,7 @@
         </ng-template>
     </ListView>
 
-    <StackLayout>
+    <StackLayout *ngIf="!deleteMode">
         <FAB (tap)="fabTap()" icon="res://add" class="fab-button"></FAB>
     </StackLayout>
 
