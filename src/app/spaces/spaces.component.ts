@@ -74,11 +74,12 @@ export class SpacesComponent {
                     token: this.user.token
                 })
             }).then((response) => {
-                // Get the new member added to the server with the id just generated
-                const result = response.content.toJSON();
-                if (result.newMember.id == -1) {
-                    alert("This email is not linked to a Stormy account.");
+                if (response.content.toJSON().status == "fail") {
+                    this.logout();
+                    alert("Your session has expired. Please log in again.");
                 } else {
+                    // Get the new member added to the server with the id just generated
+                    const result = response.content.toJSON();
                     // Update the items in the currentUser
                     let new_space = response.content.toJSON().space
                     this.user.spaces.push(new_space);

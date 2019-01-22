@@ -14,7 +14,7 @@
             <Label text="You can also create a new space here" class="label"></Label>
     
             <StackLayout *ngIf="!isLoggingIn" class="input-field">
-                <TextField  class="input" hint="Space name" returnKeyType="next" (textChange)="onTextChanged($event)"></TextField>
+                <TextField  class="input" hint="Space name" returnKeyType="next" (textChange)="onTextChanged($event)" returnKeyType="done"></TextField>
             </StackLayout>
             
             <Button text="Create new space" (tap)="onCreate()" class="btn-primary"></Button>

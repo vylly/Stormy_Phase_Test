@@ -78,9 +78,13 @@ def decode_auth_token(auth_token):
 def index():
     return 'welcome on stormy'
 
+@app.route('/policy', methods=['GET'])
+def policy():
+    return render_template("policy.html")
+
 # Route /space/add : create a new space
 # Need the name of the new space and the id of the user who created it {"name": name, "id": userID}
-# Return the new space {"space" : {"id":id, "name":name}, "token": token}
+# Return the new space {"status": "success", space" : {"id":id, "name":name}, "token": token}
 @app.route("/space/add", methods=['POST'])
 def addSpace():
     # check token

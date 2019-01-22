@@ -1,34 +1,38 @@
 <FlexboxLayout class="page">
-    <StackLayout class="form">
+  <StackLayout class="form">
 
-        <Image class="logo" src="res://logo"></Image>
+    <Image class="logo" src="res://logo"></Image>
 
-        <StackLayout class="input-field">
-			    <TextField #email class="input" hint="Email" keyboardType="email" autocorrect="false" autocapitalizationType="none" (textChange)="onChangeEmail($event)" returnKeyType="next"></TextField>
-        </StackLayout>
+    <StackLayout class="input-field">
+      <TextField #email class="input" hint="Email" keyboardType="email" autocorrect="false" autocapitalizationType="none"
+        (textChange)="onChangeEmail($event)" returnKeyType="next"></TextField>
+    </StackLayout>
 
-        <StackLayout *ngIf="!isLoggingIn" class="input-field">
-          <TextField #name class="input" hint="Name" autocorrect="false" autocapitalizationType="none" (textChange)="onChangeName($event)" returnKeyType="next" (returnPress)="focusPassword()"></TextField>
-        </StackLayout>
-      
-        <StackLayout class="input-field">
-			<TextField #password class="input" hint="Password" secure="true" (textChange)="onChangePwd($event)" [returnKeyType]="isLoggingIn ? 'done' : 'next'" (returnPress)="focusConfirmPassword()"></TextField>
-        </StackLayout>
+    <StackLayout *ngIf="!isLoggingIn" class="input-field">
+      <TextField #name class="input" hint="Name" autocorrect="false" autocapitalizationType="none" (textChange)="onChangeName($event)"
+        returnKeyType="next" (returnPress)="focusPassword()"></TextField>
+    </StackLayout>
 
-        <StackLayout *ngIf="!isLoggingIn" class="input-field">
-			<TextField #confirmPassword class="input" hint="Confirm password" secure="true" (textChange)="onChangeConfPwd($event)" returnKeyType="done"></TextField>
-          </StackLayout>
-      
-          <Button [text]="isLoggingIn ? 'Log In' : 'Sign Up'" (tap)="submit()" class="btn-primary"></Button>
+    <StackLayout class="input-field">
+      <TextField #password class="input" hint="Password" secure="true" (textChange)="onChangePwd($event)"
+        [returnKeyType]="isLoggingIn ? 'done' : 'next'" (returnPress)="focusConfirmPassword()"></TextField>
+    </StackLayout>
 
-          <Label *ngIf="isLoggingIn" text="Forgot your password?" (tap)="forgotPassword()" class="login-label"></Label>
-      </StackLayout>
+    <StackLayout *ngIf="!isLoggingIn" class="input-field">
+      <TextField #confirmPassword class="input" hint="Confirm password" secure="true" (textChange)="onChangeConfPwd($event)"
+        returnKeyType="done"></TextField>
+    </StackLayout>
 
-    <!-- Toggle the boolean isLoggingIn so the elements are displayed or not -->
-      <Label class="signup" (tap)="toggleForm()">
-        <FormattedString>
-          <Span [text]="isLoggingIn ? 'Don’t have an account? ' : 'Back to Login'"></Span>
-          <Span [text]="isLoggingIn ? 'Sign up' : ''" class="bold"></Span>
-        </FormattedString>
-      </Label>
+    <Button [text]="isLoggingIn ? 'Log In' : 'Sign Up'" (tap)="submit()" class="btn-primary"></Button>
+
+    <Label *ngIf="isLoggingIn" text="Forgot your password?" (tap)="forgotPassword()" class="login-label"></Label>
+  </StackLayout>
+
+  <!-- Toggle the boolean isLoggingIn so the elements are displayed or not -->
+  <Label class="signup" (tap)="toggleForm()">
+    <FormattedString>
+      <Span [text]="isLoggingIn ? 'Don’t have an account? ' : 'Back to Login'"></Span>
+      <Span [text]="isLoggingIn ? 'Sign up' : ''" class="bold"></Span>
+    </FormattedString>
+  </Label>
 </FlexboxLayout>
