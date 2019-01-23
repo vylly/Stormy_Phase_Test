@@ -152,7 +152,7 @@ def addItem():
             abort(400)
         # add the item to the database
         from tables import Item
-        new_item = Item(userID=request.json['owner'], parent=request.json['parent'], name=request.json['name'], space=request.json['space'])
+        new_item = Item(userID=request.json['owner'], parent=request.json['parent'], name=request.json['name'], space=request.json['space'], codeValue="")
         db_session.add(new_item)
         db_session.commit()
         # return the new item, with the id just generated

@@ -26,12 +26,14 @@ class Item(Base):
     parent = Column(Integer)
     name = Column(String)
     space = Column(Integer)
+    codeValue = Column(String)
 
-    def __init__(self, userID=None, parent=None, name=None, space=None):
+    def __init__(self, userID=None, parent=None, name=None, space=None, codeValue=None):
         self.userID = userID
         self.parent = parent
         self.name = name
         self.space= space
+        self.codeValue = codeValue
 
     def __repr__(self):
         return '<Item %s>' % (self.name)
