@@ -73,7 +73,7 @@ export class SearchComponent implements OnInit {
     // Logout : reset currentUser and route to login page
     logout() {
         this.memberService.setCurrentUser(new User());
-        this.router.navigate(["../login"]);
+        this.router.navigate(["../login"], {clearHistory: true});
     }
 
     // Go back to spaces

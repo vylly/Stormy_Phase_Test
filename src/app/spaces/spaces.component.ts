@@ -1,10 +1,11 @@
-import { Component, ElementRef, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
-import { alert, prompt } from "tns-core-modules/ui/dialogs";
+import { alert } from "tns-core-modules/ui/dialogs";
 import { DataService, User, ISpace } from "../core/data.service";
 import { TextField } from "tns-core-modules/ui/text-field";
 import { ListPicker } from "tns-core-modules/ui/list-picker";
 import { request, getJSON, HttpRequestOptions } from "tns-core-modules/http";
+import { Page } from "tns-core-modules/ui/page";
 import { Observable } from "rxjs";
 
 
@@ -26,11 +27,12 @@ export class SpacesComponent {
     typed_name: string;
 
     // Constructor
-    constructor(private routerExtension: RouterExtensions, private dataService: DataService) {
+    constructor(private routerExtension: RouterExtensions, private dataService: DataService, private page: Page) {
 
     };
 
     ngOnInit(): void {
+        this.page.actionBarHidden = false;
         this.user = this.dataService.getCurrentUser();
         // Initialise list of ISpace
         this.spaces = this.user.spaces;
@@ -118,7 +120,7 @@ export class SpacesComponent {
     // Logout : reset currentUser and route to login page
     logout() {
         this.dataService.setCurrentUser(new User());
-        this.routerExtension.navigate(["../login"]);
+        this.routerExtension.navigate(["../login"], {clearHistory: true});
     }
 
 }

@@ -214,6 +214,6 @@ export class dialogBrowseComponent {
     // Logout : reset currentUser and route to login page
     logout() {
         this.data.setCurrentUser(new User());
-        this.router.navigate(["../login"]);
+        this.router.navigate(["../login"], {clearHistory: true});
     }
 }

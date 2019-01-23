@@ -1,9 +1,9 @@
-<ActionBar class="action-bar">
+<ActionBar class="action-bar" title="title">
         <Label class="action-bar-title" text="My StormSpaces"></Label>
         <ActionItem icon="res://logout" (tap)="logout()"></ActionItem>
 </ActionBar>
 
-<GridLayout class="page page-content">
+<StackLayout>
     <StackLayout class="form">
         <StackLayout *ngIf="!noSpaces" class="input-field">
             <ListPicker [items]="listNameSpacesDisplayed | async" selectedIndex=0 (selectedIndexChange)=selectedIndexChanged($event)
@@ -21,4 +21,4 @@
         <Button text="Create new StormSpace" (tap)="onCreate()" class="btn-primary"></Button>
 
     </StackLayout>
-</GridLayout>
+</StackLayout>
