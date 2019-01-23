@@ -90,4 +90,9 @@ export class BrowseComponent implements OnInit {
             //TODO
         }
     }
+
+    // Go back to spaces
+    onNavBack() {
+        this.router.navigate(["../spaces"], {clearHistory: true});
+    }
 }

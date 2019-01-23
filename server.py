@@ -210,25 +210,31 @@ def removeItem():
         return jsonify({'status' : 'fail', 'message': decoded_token["message"]})
 
 
-# Route /member/remove : method post, remove a member from the database
-# JSON needed : { "id" : id, "space": space}
+# Route /member/remove : method post, remove a space to the space list of a user
+# JSON needed : { "id" : idUser, "space": space}
 @app.route('/member/remove', methods=['POST'])
 def removeMember():
     decoded_token = decode_auth_token(request.json["token"])
     if decoded_token["status"] == "success":
-        idToRemove = request.json["id"]
+        userID = request.json["id"]
         space = request.json["space"]
         # Find the user
         from tables import User
-        user = User.query.filter(User.id == idToRemove)
+        user = User.query.filter(User.id == userID).first()
         # Remove the space from his list of spaces
         listSpaces = stringToList(user.stringSpaces)
+        newList = []
         for sp in listSpaces:
             if sp != space:
                 newList.append(sp)
         user.stringSpaces = listToString(newList)
+        # Delete all the items owned by this user in this space
+        from tables import Item
+        listItems = Item.query.filter(and_(Item.space == (int)(space), Item.userID == (int)(userID))).all()
+        for item in listItems:
+            db_session.delete(item)
         db_session.commit()
-        return jsonify({'ok': 'ok'}), 201
+        return jsonify({'status': 'success'}), 201
     else:
         # Either the token is invalid either it is expired
         return jsonify({'status' : 'fail', 'message': decoded_token["message"]})
@@ -270,20 +276,13 @@ def signup():
     alreadyUser = User.query.filter(User.email == email).first()
     if(alreadyUser != None):
         return jsonify({'id': '-1'})
-    # Create new space for the new user and add the new space in the spaces table
-    new_space = Space(request.json["name"] + "'s Stormy")
-    db_session.add(new_space)
-    db_session.commit()
-    # Add new user and return it
-    spacesList = [new_space.id]
     # Hash + salt password before storing it
     hashedPwd = bcrypt.generate_password_hash(request.json["password"])
-    new_user = User(email=request.json["email"], password=hashedPwd, name=request.json["name"], stringSpaces=listToString(spacesList))
+    new_user = User(email=request.json["email"], password=hashedPwd, name=request.json["name"], stringSpaces=",")
     db_session.add(new_user)
     db_session.commit()
     db_session.refresh(new_user)
-    listSpaces = stringToList(new_user.stringSpaces)
-    return jsonify({'id': (int)(new_user.id), 'email': new_user.email, 'name' : new_user.name, 'spaces': fillNames(listSpaces), 'token': encode_auth_token(new_user.id)})
+    return jsonify({'id': (int)(new_user.id), 'email': new_user.email, 'name' : new_user.name, 'spaces': [], 'token': encode_auth_token(new_user.id)})
 # ============================= ROUTES ============================
 
 

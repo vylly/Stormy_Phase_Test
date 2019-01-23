@@ -1,28 +1,24 @@
-<StackLayout>
-    <ActionBar class="action-bar">
+<ActionBar class="action-bar">
         <Label class="action-bar-title" text="My StormSpaces"></Label>
         <ActionItem icon="res://logout" (tap)="logout()"></ActionItem>
-    </ActionBar>
+</ActionBar>
 
-    <FlexboxLayout class="page">
-        <StackLayout class="form">
+<GridLayout class="page page-content">
+    <StackLayout class="form">
+        <StackLayout *ngIf="!noSpaces" class="input-field">
+            <ListPicker [items]="listNameSpacesDisplayed | async" selectedIndex=0 (selectedIndexChange)=selectedIndexChanged($event)
+                class="picker"></ListPicker>
+        </StackLayout>
+        <Button *ngIf="!noSpaces" text="Go to this StormSpace" (tap)="onSubmitSpace()" class="btn-primary"></Button>
 
-            <StackLayout class="input-field">
-                <ListPicker [items]="listNameSpacesDisplayed | async" selectedIndex=0 (selectedIndexChange)=selectedIndexChanged($event)
-                    class="picker"></ListPicker>
-            </StackLayout>
-            <Button text="Go to this StormSpace" (tap)="onSubmitSpace()" class="btn-primary"></Button>
+        <Label text="You can create a new StormSpace:" class="label"></Label>
 
-            <Label text="You can also create a new StormSpace:" class="label"></Label>
-
-            <StackLayout *ngIf="!isLoggingIn" class="input-field">
-                <TextField class="input" hint="StormSpace name" returnKeyType="next" (textChange)="onTextChanged($event)"
-                    returnKeyType="done"></TextField>
-            </StackLayout>
-
-            <Button text="Create new StormSpace" (tap)="onCreate()" class="btn-primary"></Button>
-
+        <StackLayout class="input-field">
+            <TextField class="input" hint="StormSpace name" returnKeyType="next" (textChange)="onTextChanged($event)"
+                returnKeyType="done"></TextField>
         </StackLayout>
 
-    </FlexboxLayout>
-</StackLayout>
+        <Button text="Create new StormSpace" (tap)="onCreate()" class="btn-primary"></Button>
+
+    </StackLayout>
+</GridLayout>

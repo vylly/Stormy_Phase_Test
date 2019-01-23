@@ -15,6 +15,7 @@ import { Observable } from "rxjs";
     styleUrls: ["./spaces.component.scss"]
 })
 export class SpacesComponent {
+    noSpaces: boolean;
     user: User;
     field: TextField;
     picked: ISpace;
@@ -33,6 +34,11 @@ export class SpacesComponent {
         this.user = this.dataService.getCurrentUser();
         // Initialise list of ISpace
         this.spaces = this.user.spaces;
+        if (this.spaces.length == 0) {
+            this.noSpaces = true;
+        } else {
+            this.noSpaces = false;
+        }
         // Initialise list of string for the list picker
         for (let i = 0; i < this.spaces.length; i++) {
             this.listNameSpaces.push(this.spaces[i].name);
@@ -99,8 +105,10 @@ export class SpacesComponent {
                     this.dataService.setCurrentUser(this.user);
                     // Update the list picker so the newspace is displayed if we return on spaces
                     this.field.text = "";
-                    this.listNameSpaces.push(new_space.name);
-                    this.subscr.next([...this.listNameSpaces]);
+                    if (!this.noSpaces) {
+                        this.listNameSpaces.push(new_space.name);
+                        this.subscr.next([...this.listNameSpaces]);
+                    }
                     this.routerExtension.navigate(["../tabs/default"]);
                 }
             }, (e) => { });

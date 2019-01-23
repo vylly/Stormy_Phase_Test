@@ -176,6 +176,11 @@ export class HomeComponent implements OnInit {
         this.router.navigate(["../login"]);
     }
 
+    // Go back to spaces
+    onNavBack() {
+        this.router.navigate(["../spaces"], {clearHistory: true});
+    }
+
     // Delete an item
     onDelete(container) {
         dialogs.confirm("Are you sure you want to delete " + container.name + " ?").then(result => {
@@ -199,7 +204,7 @@ export class HomeComponent implements OnInit {
                     }
                 }, (e) => { });
             }
-        })
+        });
     }
 
     // Activate the delete mode

@@ -1,10 +1,11 @@
 <ActionBar class="action-bar">
+    <NavigationButton (tap)="onNavBack()" android.systemIcon="ic_menu_back"></NavigationButton>
     <Label class="action-bar-title" text="{{user.currentSpace.name}}"></Label>
     <ActionItem icon="res://logout" (tap)="logout()"></ActionItem>
 </ActionBar>
 
-<GridLayout class="page page-content">
-    <ListView [items]="members" class="list-group">
+<GridLayout class="page page-content" rows="*, 50">
+    <ListView row="0" [items]="members" class="list-group">
         <ng-template let-member="item">
             <StackLayout [nsRouterLink]="['../member', member.id]" class="list-group-item">
                 <Label [text]="member.name" class="list-group-item-heading"></Label>
@@ -13,8 +14,10 @@
         </ng-template>
     </ListView>
 
+    <Button row="1" text="Leave this StormSpace" (tap)="onLeave()"></Button>
+
     <StackLayout>
-        <FAB (tap)="fabTap()" icon="res://add" class="fab-button"></FAB>
+        <FAB row="0" (tap)="fabTap()" icon="res://add" class="fab-button"></FAB>
     </StackLayout>
 
 </GridLayout>
