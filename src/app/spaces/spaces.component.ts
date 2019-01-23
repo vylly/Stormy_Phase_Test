@@ -5,6 +5,7 @@ import { DataService, User, ISpace } from "../core/data.service";
 import { TextField } from "tns-core-modules/ui/text-field";
 import { ListPicker } from "tns-core-modules/ui/list-picker";
 import { request, getJSON, HttpRequestOptions } from "tns-core-modules/http";
+import { Observable } from "rxjs";
 
 
 @Component({
@@ -15,9 +16,12 @@ import { request, getJSON, HttpRequestOptions } from "tns-core-modules/http";
 })
 export class SpacesComponent {
     user: User;
+    field: TextField;
     picked: ISpace;
     spaces: Array<ISpace>;
     listNameSpaces: Array<string> = [];
+    listNameSpacesDisplayed: Observable<Array<string>>;
+    subscr;
     typed_name: string;
 
     // Constructor
@@ -34,7 +38,15 @@ export class SpacesComponent {
             this.listNameSpaces.push(this.spaces[i].name);
         }
         this.typed_name = "";
-        console.log("user logged :", this.user);
+        //Watch for changes in the list of names
+        this.listNameSpacesDisplayed = Observable.create(subscriber => {
+            this.subscr = subscriber;
+            subscriber.next(this.listNameSpaces);
+            return function () {
+                console.log("Unsubscribe called!!!");
+            };
+
+        });
     }
 
 
@@ -53,8 +65,8 @@ export class SpacesComponent {
 
     // Get the name type in the field
     public onTextChanged(args) {
-        let textField = <TextField>args.object;
-        this.typed_name = textField.text;
+        this.field = <TextField>args.object;
+        this.typed_name = this.field.text;
 
     }
 
@@ -84,8 +96,11 @@ export class SpacesComponent {
                     let new_space = response.content.toJSON().space
                     this.user.spaces.push(new_space);
                     this.user.currentSpace = new_space;
-                    this.listNameSpaces.push(new_space.name);
                     this.dataService.setCurrentUser(this.user);
+                    // Update the list picker so the newspace is displayed if we return on spaces
+                    this.field.text = "";
+                    this.listNameSpaces.push(new_space.name);
+                    this.subscr.next([...this.listNameSpaces]);
                     this.routerExtension.navigate(["../tabs/default"]);
                 }
             }, (e) => { });
