@@ -116,7 +116,7 @@ def items():
         listItems = Item.query.filter(Item.space == int(space))
         output = []
         for item in listItems:
-            output.append({'id':item.id, 'name': item.name, 'parent': item.parent, 'owner': item.userID, 'space': item.space})
+            output.append({'id':item.id, 'name': item.name, 'parent': item.parent, 'owner': item.userID, 'space': item.space, 'codeValue': item.codeValue})
         return jsonify({'status': 'success', 'listItems': output})
     else:
         # Either the token is invalid either it is expired
@@ -141,7 +141,7 @@ def members():
         return jsonify({'status' : 'fail', 'message': decoded_token["message"]})
 
 # Route /item/add : method post, add a new item to the database
-# JSON needed : { "name": "abcde", "parent": 45, "owner": 12, "space": 1}
+# JSON needed : { "name": "abcde", "parent": 45, "owner": 12, "space": 1, "codeValue": codeValue}
 # Return {"newItem" : {"id", "name", "parent", "owner"}}
 @app.route('/item/add', methods=['POST'])
 def addItem():
@@ -150,15 +150,33 @@ def addItem():
         space = request.json["space"]
         if not request.json or not 'name' in request.json:
             abort(400)
+        # Check if codeValue is filled
+        if "codeValue" in request.json:
+            codeValue = request.json["codeValue"]
+        else:
+            codeValue = ""
         # add the item to the database
         from tables import Item
-        new_item = Item(userID=request.json['owner'], parent=request.json['parent'], name=request.json['name'], space=request.json['space'], codeValue="")
+        new_item = Item(userID=request.json['owner'], parent=request.json['parent'], name=request.json['name'], space=request.json['space'], codeValue=codeValue)
         db_session.add(new_item)
         db_session.commit()
         # return the new item, with the id just generated
         return jsonify({'status': 'success', 'newItem': {'id': new_item.id, 'name': new_item.name, 'parent': new_item.parent, 'owner': new_item.userID}}), 201
     else:
         # Either the token is invalid either it is expired
+        return jsonify({'status' : 'fail', 'message': decoded_token["message"]})
+
+# Route /item/getParent : method post, get the parent of a item
+# JSON needed : {"id": id, "token": token}
+# Return {"status": status, "id", id}
+@app.route('/item/getParent', methods=['POST'])
+def getParent():
+    decoded_token = decode_auth_token(request.json["token"])
+    if decoded_token["status"] == "success":
+        from tables import Item
+        item = Item.query.filter(Item.id == request.json["id"]).first()
+        return jsonify({"status": "success", "parent": item.parent})
+    else:
         return jsonify({'status' : 'fail', 'message': decoded_token["message"]})
 
 # Route /member/add : method post, add a new member to a space

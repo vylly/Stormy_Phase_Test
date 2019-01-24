@@ -33,6 +33,9 @@ export class dialogBrowseComponent {
     public picked: IDataContainer;
     public answer;
 
+    // Barcodes
+    public barcode;
+
     private subscr;
     selectedLocationIndex = 0;
 
@@ -45,10 +48,13 @@ export class dialogBrowseComponent {
     ) {
 
         // just in case we create an object directly
-        this.objectParent = { id: 0, name: "root", listItems: new Array<IDataContainer>(), owner: this.data.getMemberList()[0] };
+        this.objectParent = { id: 0, name: "root", listItems: new Array<IDataContainer>(), codeValue: "", owner: this.data.getMemberList()[0] };
 
         //Receive list of containers in its purest form
         this.objects = _params.context.objects
+
+        // Get barcode
+        this.barcode = _params.context.barcode
 
         //Extract names from the list 
         for (let i = 0; i < this.objects.length; i++) {
@@ -60,7 +66,7 @@ export class dialogBrowseComponent {
             this.subscr = subscriber;
             subscriber.next(this.objectsNames);
             return function () {
-                console.log("Unsubscribe calleed!!!");
+                console.log("Unsubscribe called!!!");
             };
 
         });
@@ -79,7 +85,6 @@ export class dialogBrowseComponent {
 
     //Called when click on left arrow (access to parent container)
     public up() {
-        //console.log("We wish to display parent of : " + this.picked.name + " with id : " + this.picked.id);
 
         // --- If the size of the path is 1 : not possible to go up --- //
         if (this.pathToPicked.length == 1) {
@@ -110,7 +115,6 @@ export class dialogBrowseComponent {
 
             // --- If the size of the path is > 2 : need to display parent of picked --- //
         } else {
-            console.log("this.pathToPicked.length > 2 SHOULD NOT APPEAR ATM")
             this.picked = this.objectParent;
             this.data.getContainer(this.picked.id)
 
@@ -132,7 +136,6 @@ export class dialogBrowseComponent {
 
     //Called when click on right arrow (access to child container)
     public down(args) {
-        console.log("We wish to display childs of : " + this.picked.name + " with id : " + this.picked.id);
 
         //Add current ID to path
         this.pathToPicked.push(this.picked.id);
@@ -143,7 +146,6 @@ export class dialogBrowseComponent {
         //If the selected item has childs, display it
         //console.log(this.data.getListItems(this.picked.id).length)
         if (this.picked.listItems.length != 0) {
-            console.log(this.picked.listItems)
             //Clear array
             this.objectsNames = [];
             this.objects = [];
@@ -153,7 +155,6 @@ export class dialogBrowseComponent {
                 this.objectsNames.push(this.data.getListItems(this.picked.id)[i].name);
                 this.objects.push(this.data.getListItems(this.picked.id)[i]);
             }
-            console.log(this.objectsNames);
             //Update selected container
 
             //11/01/2018 Commenté cette ligne
@@ -163,11 +164,10 @@ export class dialogBrowseComponent {
             this.subscr.next([...this.objectsNames]);
 
             //console.log("picker.selectedIndex" + picker.selectedIndex)
-            console.log("this.picked.id :" + this.picked.id)
             //Add clicked component to path
             //this.objectPath.push()
         } else {
-            console.log("Containers has no childs !!!")
+            console.log("Containers has no children !!!")
         }
     }
 
@@ -180,7 +180,6 @@ export class dialogBrowseComponent {
 
     //To close the dialog, call the closeCallback function of the dialog params.
     public close(result: string) {
-        console.log("result:" + result);
         if (result) {
             this.answer = { owner: 'All', newContainer: result }
             console.log(this.data.getCurrentUser());
@@ -195,7 +194,8 @@ export class dialogBrowseComponent {
                     name: result,
                     parent: this.objectParent.id,
                     space: this.data.getCurrentUser().currentSpace.id,
-                    token: this.data.getCurrentUser().token
+                    token: this.data.getCurrentUser().token,
+                    codeValue: this.barcode.value
                 })
             }).then((response) => {
                 if (response.content.toJSON().status == "fail") {

@@ -6,6 +6,7 @@ export interface IDataContainer {
     name: string;
     listItems: Array<IDataContainer>;
     owner: IMember;
+    codeValue: string;
 }
 
 export interface IMember {
@@ -33,9 +34,9 @@ export class User {
 @Injectable()
 export class DataService {
 
-    protected IP_Server: String = "51.38.68.118:5000"
-    //protected IP_Server: String = "192.168.1.25:5000"
-    //protected IP_Server: String = "192.168.1.14:5000"
+    protected IP_Server: String = "51.38.68.118:5000";
+    //protected IP_Server: String = "192.168.1.25:5000";
+    //protected IP_Server: String = "192.168.1.14:5000";
 
     protected members = new Array<IMember>();
 
@@ -58,7 +59,7 @@ export class DataService {
         this.containers.splice(0, this.containers.length);
         list.forEach(item => {
             if(item.parent == 0) {
-                this.containers.push({id: item.id, name: item.name, owner: this.getMember(item.owner), listItems: new Array<IDataContainer>()});
+                this.containers.push({id: item.id, name: item.name, owner: this.getMember(item.owner), listItems: new Array<IDataContainer>(), codeValue: item.codeValue});
             }
         })
     }
@@ -69,7 +70,7 @@ export class DataService {
                 let parent = this.containers.find(element => {
                     return element.id == item.parent
                 });
-                parent.listItems.push({id: item.id, name: item.name, owner: this.getMember(item.owner), listItems: new Array<IDataContainer>()});
+                parent.listItems.push({id: item.id, name: item.name, owner: this.getMember(item.owner), listItems: new Array<IDataContainer>(), codeValue: item.codeValue});
             }
         });
     }
@@ -125,7 +126,8 @@ export class DataService {
              id: jsonResponse.newItem.id,
              name: jsonResponse.newItem.name,
              owner: this.getMember(jsonResponse.newItem.owner),
-             listItems: new Array<IDataContainer>()
+             listItems: new Array<IDataContainer>(),
+             codeValue: jsonResponse.newItem.codeValue
          }
          // Add it to the containers in the data service just in case
          this.addContainer(newContainer, jsonResponse.newItem.parent);
