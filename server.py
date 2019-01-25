@@ -8,6 +8,7 @@ from database import db_session
 import json
 from flask_bcrypt import Bcrypt
 import jwt
+from waitress import serve
 import datetime
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -306,5 +307,6 @@ def signup():
 
 # --------------- run server --------------------------------------
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0" )#, ssl_context=('/etc/letsencrypt/live/118.ip-51-38-68.eu/fullchain.pem', '/etc/letsencrypt/live/118.ip-51-38-68.eu/privkey.pem'))
+    # app.run(debug=True, host="0.0.0.0" )#, ssl_context=('/etc/letsencrypt/live/118.ip-51-38-68.eu/fullchain.pem', '/etc/letsencrypt/live/118.ip-51-38-68.eu/privkey.pem'))
     # IP address 0.0.0.0 makes the server externally visible
+    serve(app, host="0.0.0.0", port=5000)
